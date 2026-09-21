@@ -38,6 +38,7 @@ const notes = [
 ];
 
 const app = express();
+app.use(express.json());
 
 app.get("/notes", (req, res) => {
   let results = notes;
@@ -48,6 +49,21 @@ app.get("/notes", (req, res) => {
   }
 
   res.json(results);
+});
+
+let nextId = 6;
+
+app.post("/notes", (req, res) => {
+  const newNote = {
+    id: nextId,
+    title: req.body.title,
+    description: req.body.description,
+    tag: req.body.tag,
+  };
+
+  nextId++;
+  notes.push(newNote);
+  res.status(201).json(newNote);
 });
 
 app.get("/notes/:id", (req, res) => {
