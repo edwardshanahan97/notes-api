@@ -1,6 +1,6 @@
 import express from "express";
 
-const notes = [
+let notes = [
   {
     id: 1,
     title: "Note 1",
@@ -54,6 +54,12 @@ app.get("/notes", (req, res) => {
 let nextId = 6;
 
 app.post("/notes", (req, res) => {
+  if (!req.body || !req.body.title || !req.body.description || !req.body.tag) {
+    return res
+      .status(400)
+      .json({ error: "Title, description and tag are required" });
+  }
+
   const newNote = {
     id: nextId,
     title: req.body.title,
@@ -74,6 +80,30 @@ app.get("/notes/:id", (req, res) => {
   }
 
   res.json(note);
+});
+
+app.put("/notes/:id", (req, res) => {
+  const note = notes.find((note) => note.id === Number(req.params.id));
+
+  if (!note) {
+    return res.status(404).json({ error: "Note not found" });
+  }
+
+  note.title = req.body.title;
+  note.description = req.body.description;
+  note.tag = req.body.tag;
+  res.json(note);
+});
+
+app.delete("/notes/:id", (req, res) => {
+  const note = notes.find((note) => note.id === Number(req.params.id));
+
+  if (!note) {
+    return res.status(404).json({ error: "Note not found" });
+  }
+
+  notes = notes.filter((n) => n.id !== note.id);
+  res.status(204).end();
 });
 
 app.use((req, res) => {
