@@ -40,6 +40,11 @@ let notes = [
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log(req.method + " " + req.url);
+  next();
+});
+
 app.get("/notes", (req, res) => {
   let results = notes;
   const tag = req.query.tag;
