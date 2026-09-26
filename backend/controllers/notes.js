@@ -1,8 +1,8 @@
 import pool from "../db/db.js";
-const notes = await pool.query("SELECT * FROM notes");
 
-export const getNotes = (req, res) => {
-  res.json(notes.rows);
+export const getNotes = async (req, res) => {
+  const results = await pool.query("SELECT * FROM notes");
+  res.json(results.rows);
 };
 
 export const addNote = async (req, res) => {
@@ -38,17 +38,28 @@ export const getNoteById = async (req, res) => {
   res.json(result.rows[0]);
 };
 
-export const editNote = (req, res) => {
-  const note = notes.find((note) => note.id === Number(req.params.id));
+export const editNote = async (req, res) => {
+  const id = Number(req.params.id);
+  const title = req.body.title;
+  const content = req.body.content;
+  const tag = req.body.tag;
 
-  if (!note) {
+  if (!req.body || !title || !content || !tag) {
+    return res
+      .status(400)
+      .json({ error: "Title, content and tag are required" });
+  }
+
+  const result = await pool.query(
+    "UPDATE notes SET title = $1, content = $2, tag = $3 WHERE id = $4 RETURNING *",
+    [title, content, tag, id],
+  );
+
+  if (result.rows.length === 0) {
     return res.status(404).json({ error: "Note not found" });
   }
 
-  note.title = req.body.title;
-  note.description = req.body.description;
-  note.tag = req.body.tag;
-  res.json(note);
+  res.json(result.rows[0]);
 };
 
 export const deleteNote = (req, res) => {
