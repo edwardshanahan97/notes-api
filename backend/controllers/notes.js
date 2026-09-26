@@ -1,7 +1,8 @@
-import notes from "../data/notes.js";
+import pool from "../db/db.js";
+const notes = await pool.query("SELECT * FROM notes");
 
 export const getNotes = (req, res) => {
-  res.json(notes);
+  res.json(notes.rows);
 };
 
 let nextId = 6;
