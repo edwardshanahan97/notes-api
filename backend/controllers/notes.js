@@ -5,35 +5,37 @@ export const getNotes = (req, res) => {
   res.json(notes.rows);
 };
 
-let nextId = 6;
+export const addNote = async (req, res) => {
+  const title = req.body.title;
+  const content = req.body.content;
+  const tag = req.body.tag;
 
-export const addNote = (req, res) => {
-  if (!req.body || !req.body.title || !req.body.description || !req.body.tag) {
+  if (!req.body || !title || !content || !tag) {
     return res
       .status(400)
-      .json({ error: "Title, description and tag are required" });
+      .json({ error: "Title, content and tag are required" });
   }
 
-  const newNote = {
-    id: nextId,
-    title: req.body.title,
-    description: req.body.description,
-    tag: req.body.tag,
-  };
+  const result = await pool.query(
+    "INSERT  INTO  notes (title, content, tag) VALUES ($1, $2, $3) RETURNING *",
+    [title, content, tag],
+  );
 
-  nextId++;
-  notes.push(newNote);
-  res.status(201).json(newNote);
+  res.status(201).json(result.rows);
 };
 
-export const getNoteById = (req, res) => {
-  const note = notes.find((note) => note.id === Number(req.params.id));
+export const getNoteById = async (req, res) => {
+  const id = Number(req.params.id);
+  const result = await pool.query(
+    "SELECT title, content, id, tag FROM notes WHERE id = $1",
+    [id],
+  );
 
-  if (!note) {
+  if (result.rows.length === 0) {
     return res.status(404).json({ error: "Note not found!" });
   }
 
-  res.json(note);
+  res.json(result.rows[0]);
 };
 
 export const editNote = (req, res) => {
