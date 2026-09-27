@@ -1,106 +1,63 @@
-import pool from "../db/db.js";
+import notes from "../data/notes.js";
 
-export const getNotes = async (req, res) => {
-  const results = await pool.query("SELECT * FROM notes");
-  res.json(results.rows);
+export const getNotes = (req, res) => {
+  res.json(notes);
 };
 
-export const addNote = async (req, res) => {
-  const title = req.body.title;
-  const content = req.body.content;
-  const tag = req.body.tag;
+let nextId = 6;
 
-  if (!req.body || typeof title !== "string" || typeof content !== "string") {
-    return res.status(400).json({ error: "Title and content must be strings" });
+export const addNote = (req, res) => {
+  if (!req.body || !req.body.title || !req.body.description || !req.body.tag) {
+    return res
+      .status(400)
+      .json({ error: "Title, description and tag are required" });
   }
 
-  const result = await pool.query(
-    "INSERT  INTO  notes (title, content) VALUES ($1, $2) RETURNING *",
-    [title, content],
-  );
+  const newNote = {
+    id: nextId,
+    title: req.body.title,
+    description: req.body.description,
+    tag: req.body.tag,
+  };
 
-  const resultTag = await pool.query(
-    "SELECT id, name FROM tags WHERE name = $1",
-    [tag],
-  );
-
-  let tagId;
-
-  if (resultTag.rows.length === 0) {
-    const newTag = await pool.query(
-      "INSERT INTO tags (name) VALUES ($1) RETURNING *",
-      [tag],
-    );
-
-    tagId = newTag.rows[0].id;
-  } else {
-    tagId = resultTag.rows[0].id;
-  }
-
-  const noteId = result.rows[0].id;
-
-  await pool.query("INSERT INTO note_tags (note_id, tag_id) VALUES ($1, $2)", [
-    noteId,
-    tagId,
-  ]);
-
-  res.status(201).json(result.rows[0]);
+  nextId++;
+  notes.push(newNote);
+  res.status(201).json(newNote);
 };
 
-export const getNoteById = async (req, res) => {
-  const id = Number(req.params.id);
-  const result = await pool.query(
-    "SELECT title, content, id FROM notes WHERE id = $1",
-    [id],
-  );
+export const getNoteById = (req, res) => {
+  const note = notes.find((note) => note.id === Number(req.params.id));
 
-  const resultTag = await pool.query(
-    "SELECT tags.name FROM note_tags JOIN tags ON note_tags.tag_id = tags.id WHERE note_tags.note_id = $1",
-    [id],
-  );
-
-  if (result.rows.length === 0) {
+  if (!note) {
     return res.status(404).json({ error: "Note not found!" });
   }
 
-  res.json({
-    note: result.rows[0],
-    tags: resultTag.rows,
-  });
+  res.json(note);
 };
 
-export const editNote = async (req, res) => {
-  const id = Number(req.params.id);
-  const title = req.body.title;
-  const content = req.body.content;
-  const tag = req.body.tag;
+export const editNote = (req, res) => {
+  const note = notes.find((note) => note.id === Number(req.params.id));
 
-  if (!req.body || typeof title !== "string" || typeof content !== "string") {
-    return res.status(400).json({ error: "Title and content must be strings" });
-  }
-
-  const result = await pool.query(
-    "UPDATE notes SET title = $1, content = $2, updated_at = NOW() WHERE id = $3 RETURNING *",
-    [title, content, id],
-  );
-
-  if (result.rows.length === 0) {
+  if (!note) {
     return res.status(404).json({ error: "Note not found" });
   }
 
-  res.json(result.rows[0]);
+  note.title = req.body.title;
+  note.description = req.body.description;
+  note.tag = req.body.tag;
+  res.json(note);
 };
 
-export const deleteNote = async (req, res) => {
-  const id = Number(req.params.id);
-  const result = await pool.query(
-    "DELETE FROM notes WHERE id = $1 RETURNING *",
-    [id],
+export const deleteNote = (req, res) => {
+  const noteIndex = notes.findIndex(
+    (note) => note.id === Number(req.params.id),
   );
 
-  if (result.rows.length === 0) {
+  if (noteIndex < 0) {
     return res.status(404).json({ error: "Note not found" });
   }
+
+  notes.splice(noteIndex, 1);
 
   res.status(204).end();
 };
