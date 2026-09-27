@@ -8,15 +8,14 @@ export const getNotes = async (req, res) => {
 export const addNote = async (req, res) => {
   const title = req.body.title;
   const content = req.body.content;
-  const tag = req.body.tag;
 
   if (!req.body || typeof title !== "string" || typeof content !== "string") {
     return res.status(400).json({ error: "Title and content must be strings" });
   }
 
   const result = await pool.query(
-    "INSERT  INTO  notes (title, content, tag) VALUES ($1, $2, $3) RETURNING *",
-    [title, content, tag],
+    "INSERT  INTO  notes (title, content) VALUES ($1, $2) RETURNING *",
+    [title, content],
   );
 
   res.status(201).json(result.rows[0]);
