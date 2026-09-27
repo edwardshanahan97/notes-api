@@ -62,16 +62,16 @@ export const editNote = async (req, res) => {
   res.json(result.rows[0]);
 };
 
-export const deleteNote = (req, res) => {
-  const noteIndex = notes.findIndex(
-    (note) => note.id === Number(req.params.id),
+export const deleteNote = async (req, res) => {
+  const id = Number(req.params.id);
+  const result = await pool.query(
+    "DELETE FROM notes WHERE id = $1 RETURNING *",
+    [id],
   );
 
-  if (noteIndex < 0) {
+  if (result.rows.length === 0) {
     return res.status(404).json({ error: "Note not found" });
   }
-
-  notes.splice(noteIndex, 1);
 
   res.status(204).end();
 };
