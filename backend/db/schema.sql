@@ -8,7 +8,7 @@ CREATE TABLE notes (
 
 CREATE TABLE tags (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name TEXT
+    name TEXT UNIQUE
 );
 
 CREATE TABLE note_tags (
