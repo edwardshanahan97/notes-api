@@ -10,10 +10,8 @@ export const addNote = async (req, res) => {
   const content = req.body.content;
   const tag = req.body.tag;
 
-  if (!req.body || !title || !content || !tag) {
-    return res
-      .status(400)
-      .json({ error: "Title, content and tag are required" });
+  if (!req.body || typeof title !== "string" || typeof content !== "string") {
+    return res.status(400).json({ error: "Title and content must be strings" });
   }
 
   const result = await pool.query(
@@ -21,7 +19,7 @@ export const addNote = async (req, res) => {
     [title, content, tag],
   );
 
-  res.status(201).json(result.rows);
+  res.status(201).json(result.rows[0]);
 };
 
 export const getNoteById = async (req, res) => {
@@ -44,14 +42,12 @@ export const editNote = async (req, res) => {
   const content = req.body.content;
   const tag = req.body.tag;
 
-  if (!req.body || !title || !content || !tag) {
-    return res
-      .status(400)
-      .json({ error: "Title, content and tag are required" });
+  if (!req.body || typeof title !== "string" || typeof content !== "string") {
+    return res.status(400).json({ error: "Title and content must be strings" });
   }
 
   const result = await pool.query(
-    "UPDATE notes SET title = $1, content = $2, tag = $3 WHERE id = $4 RETURNING *",
+    "UPDATE notes SET title = $1, content = $2, tag = $3, updated_at = NOW() WHERE id = $4 RETURNING *",
     [title, content, tag, id],
   );
 
