@@ -17,4 +17,4 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not found" });
 });
 
-app.listen(3000, () => console.log("Server is running"));
+app.listen(process.env.PORT, () => console.log("Server is running"));

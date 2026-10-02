@@ -1,7 +1,10 @@
 import notes from "../database/notes.js";
+import pool from "../database/db.js";
 
-export const getNotes = (req, res) => {
-  res.json(notes);
+export const getNotes = async (req, res) => {
+  const result = await pool.query("SELECT * FROM notes");
+
+  res.json(result.rows);
 };
 
 let nextId = 6;
