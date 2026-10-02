@@ -1,10 +1,37 @@
 import notes from "../database/notes.js";
 import pool from "../database/db.js";
+const USER_ID = 1;
 
 export const getNotes = async (req, res) => {
-  const result = await pool.query("SELECT * FROM notes");
+  try {
+    const result = await pool.query("SELECT * FROM notes WHERE user_id = $1", [
+      USER_ID,
+    ]);
 
-  res.json(result.rows);
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error!" });
+  }
+};
+
+export const getNoteById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const result = await pool.query(
+      "SELECT * FROM notes WHERE id = $1 AND user_id = $2",
+      [id, USER_ID],
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Note not found!" });
+    }
+
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error!" });
+  }
 };
 
 let nextId = 6;
@@ -26,16 +53,6 @@ export const addNote = (req, res) => {
   nextId++;
   notes.push(newNote);
   res.status(201).json(newNote);
-};
-
-export const getNoteById = (req, res) => {
-  const note = notes.find((note) => note.id === Number(req.params.id));
-
-  if (!note) {
-    return res.status(404).json({ error: "Note not found!" });
-  }
-
-  res.json(note);
 };
 
 export const editNote = (req, res) => {
