@@ -1,5 +1,5 @@
 import express from "express";
-import notes from "../data/notes.js";
+
 import {
   addNote,
   deleteNote,

@@ -1,4 +1,4 @@
-import notes from "../data/notes.js";
+import notes from "../database/notes.js";
 
 export const getNotes = (req, res) => {
   res.json(notes);
