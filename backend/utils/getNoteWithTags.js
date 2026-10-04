@@ -7,6 +7,7 @@ const getNoteWithTags = async (client, id, userId) => {
       notes.created_at,
       notes.updated_at,
       notes.user_id,
+      notes.favorite,
       COALESCE(
     ARRAY_AGG(tags.name) FILTER (WHERE tags.name IS NOT NULL),
     '{}'
