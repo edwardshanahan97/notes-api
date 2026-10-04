@@ -1,13 +1,31 @@
-import notes from "../database/notes.js";
 import pool from "../database/db.js";
 import getNoteWithTags from "../utils/getNoteWithTags.js";
+import addTagsToNote from "../utils/addTagsToNote.js";
 const USER_ID = 1;
 
 export const getNotes = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM notes WHERE user_id = $1", [
-      USER_ID,
-    ]);
+    const result = await pool.query(
+      `
+    SELECT
+      notes.id,
+      notes.content,
+      notes.created_at,
+      notes.updated_at,
+      notes.user_id,
+      COALESCE(
+    ARRAY_AGG(tags.name) FILTER (WHERE tags.name IS NOT NULL),
+    '{}'
+  ) AS tags
+    FROM notes
+    LEFT JOIN note_tags ON note_tags.note_id = notes.id
+    LEFT JOIN tags ON tags.id = note_tags.tag_id
+    WHERE notes.user_id = $1
+    GROUP BY notes.id
+    ORDER BY notes.updated_at DESC
+  `,
+      [USER_ID],
+    );
 
     res.json(result.rows);
   } catch (error) {
@@ -64,30 +82,7 @@ export const addNote = async (req, res) => {
 
     const noteId = contentResult.rows[0].id;
 
-    for (const tag of uniqueTags) {
-      const tagResult = await client.query(
-        "SELECT id FROM tags WHERE name = $1",
-        [tag],
-      );
-
-      let tagId;
-
-      if (tagResult.rows.length > 0) {
-        tagId = tagResult.rows[0].id;
-      } else {
-        const newTagResult = await client.query(
-          "INSERT INTO tags (name) VALUES ($1) RETURNING id",
-          [tag],
-        );
-
-        tagId = newTagResult.rows[0].id;
-      }
-
-      await client.query(
-        "INSERT INTO note_tags (note_id, tag_id) VALUES ($1, $2)",
-        [noteId, tagId],
-      );
-    }
+    await addTagsToNote(client, noteId, uniqueTags);
 
     const note = await getNoteWithTags(client, noteId, USER_ID);
 
@@ -149,30 +144,7 @@ export const editNote = async (req, res) => {
 
     await client.query("DELETE FROM note_tags WHERE note_id = $1", [id]);
 
-    for (const tag of uniqueTags) {
-      const tagResult = await client.query(
-        "SELECT id FROM tags WHERE name = $1",
-        [tag],
-      );
-
-      let tagId;
-
-      if (tagResult.rows.length > 0) {
-        tagId = tagResult.rows[0].id;
-      } else {
-        const newTagResult = await client.query(
-          "INSERT INTO tags (name) VALUES ($1) RETURNING id",
-          [tag],
-        );
-
-        tagId = newTagResult.rows[0].id;
-      }
-
-      await client.query(
-        "INSERT INTO note_tags (note_id, tag_id) VALUES ($1, $2)",
-        [noteId, tagId],
-      );
-    }
+    await addTagsToNote(client, noteId, uniqueTags);
 
     const note = await getNoteWithTags(client, noteId, USER_ID);
 

@@ -34,3 +34,6 @@ VALUES
     (2, 2),
     (3, 3),
     (4, 4);
+
+ALTER TABLE notes
+ADD COLUMN favorite BOOLEAN NOT NULL DEFAULT FALSE;
