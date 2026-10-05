@@ -1,5 +1,6 @@
 import express from "express";
-import router from "./routes/notes.js";
+import notesRouter from "./routes/notes.js";
+import authRouter from "./routes/auth.js";
 import cors from "cors";
 
 const app = express();
@@ -11,7 +12,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/notes", router);
+app.use("/api/notes", notesRouter);
+
+app.use("/api/auth", authRouter);
 
 app.use((req, res) => {
   res.status(404).json({ error: "Not found" });

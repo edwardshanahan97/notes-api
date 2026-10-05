@@ -8,16 +8,16 @@ import {
   getNotes,
 } from "../controllers/notes.js";
 
-const router = express.Router();
+const notesRouter = express.Router();
 
-router.get("/", getNotes);
+notesRouter.get("/", getNotes);
 
-router.post("/", addNote);
+notesRouter.post("/", addNote);
 
-router.get("/:id", getNoteById);
+notesRouter.get("/:id", getNoteById);
 
-router.put("/:id", editNote);
+notesRouter.put("/:id", editNote);
 
-router.delete("/:id", deleteNote);
+notesRouter.delete("/:id", deleteNote);
 
-export default router;
+export default notesRouter;
