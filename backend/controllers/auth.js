@@ -86,7 +86,36 @@ export const login = async (req, res) => {
 
     const { id, name, email: emailResult, created_at } = user.rows[0];
 
+    req.session.userId = id;
+
     res.json({ id, name, email: emailResult, created_at });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({ error: "Internal server error!" });
+  }
+};
+
+export const getCurrentUser = async (req, res) => {
+  const userId = req.session.userId;
+
+  console.log(req.session.userId);
+
+  if (!userId) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  try {
+    const userResult = await pool.query(
+      "SELECT id, name, email, created_at FROM users WHERE id = $1",
+      [userId],
+    );
+
+    if (userResult.rowCount === 0) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    res.json(userResult.rows[0]);
   } catch (error) {
     console.log(error);
 

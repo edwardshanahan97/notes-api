@@ -2,6 +2,7 @@ import express from "express";
 import notesRouter from "./routes/notes.js";
 import authRouter from "./routes/auth.js";
 import cors from "cors";
+import session from "express-session";
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,18 @@ app.use((req, res, next) => {
   console.log(req.method + " " + req.url);
   next();
 });
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+  }),
+);
 
 app.use("/api/notes", notesRouter);
 
