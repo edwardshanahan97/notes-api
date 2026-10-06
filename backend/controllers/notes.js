@@ -1,13 +1,13 @@
 import pool from "../database/db.js";
 import getNoteWithTags from "../utils/getNoteWithTags.js";
 import addTagsToNote from "../utils/addTagsToNote.js";
-const USER_ID = 1;
 
 export const getNotes = async (req, res) => {
   const { favorite, search, tag } = req.query;
+  const userId = req.session.userId;
 
   const conditions = ["notes.user_id = $1"];
-  const values = [USER_ID];
+  const values = [userId];
 
   if (favorite !== undefined) {
     if (favorite !== "true" && favorite !== "false") {
@@ -80,8 +80,9 @@ export const getNotes = async (req, res) => {
 
 export const getNoteById = async (req, res) => {
   const id = req.params.id;
+  const userId = req.session.userId;
   try {
-    const note = await getNoteWithTags(pool, id, USER_ID);
+    const note = await getNoteWithTags(pool, id, userId);
 
     if (!note) {
       return res.status(404).json({ error: "Note not found!" });
@@ -98,6 +99,7 @@ export const addNote = async (req, res) => {
   const content = req.body.content;
   const tags = req.body.tags;
   const favorite = req.body.favorite;
+  const userId = req.session.userId;
 
   if (
     typeof content !== "string" ||
@@ -126,14 +128,14 @@ export const addNote = async (req, res) => {
        VALUES ($1, $2, $3)
        RETURNING id
    `,
-      [content, USER_ID, favorite],
+      [content, userId, favorite],
     );
 
     const noteId = contentResult.rows[0].id;
 
     await addTagsToNote(client, noteId, uniqueTags);
 
-    const note = await getNoteWithTags(client, noteId, USER_ID);
+    const note = await getNoteWithTags(client, noteId, userId);
 
     await client.query("COMMIT");
 
@@ -156,6 +158,7 @@ export const editNote = async (req, res) => {
   const content = req.body.content;
   const tags = req.body.tags;
   const favorite = req.body.favorite;
+  const userId = req.session.userId;
 
   if (
     typeof content !== "string" ||
@@ -187,7 +190,7 @@ export const editNote = async (req, res) => {
       WHERE id = $2 AND user_id = $4
       RETURNING id
    `,
-      [content, id, favorite, USER_ID],
+      [content, id, favorite, userId],
     );
 
     if (contentResult.rows.length === 0) {
@@ -201,7 +204,7 @@ export const editNote = async (req, res) => {
 
     await addTagsToNote(client, noteId, uniqueTags);
 
-    const note = await getNoteWithTags(client, noteId, USER_ID);
+    const note = await getNoteWithTags(client, noteId, userId);
 
     await client.query("COMMIT");
 
@@ -221,12 +224,13 @@ export const editNote = async (req, res) => {
 
 export const deleteNote = async (req, res) => {
   const id = req.params.id;
+  const userId = req.session.userId;
 
   try {
     const result = await pool.query(
       `DELETE FROM notes
        WHERE id = $1 AND user_id = $2`,
-      [id, USER_ID],
+      [id, userId],
     );
 
     if (result.rowCount === 0) {

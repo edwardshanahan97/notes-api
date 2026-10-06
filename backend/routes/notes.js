@@ -8,7 +8,11 @@ import {
   getNotes,
 } from "../controllers/notes.js";
 
+import requireAuth from "../middleware/requireAuth.js";
+
 const notesRouter = express.Router();
+
+notesRouter.use(requireAuth);
 
 notesRouter.get("/", getNotes);
 
