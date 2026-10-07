@@ -1,8 +1,10 @@
 import pool from "../database/db.js";
 import getNoteWithTags from "../utils/getNoteWithTags.js";
 import addTagsToNote from "../utils/addTagsToNote.js";
+import isValidId from "../utils/isValidId.js";
+import validateNoteData from "../utils/validateNoteData.js";
 
-export const getNotes = async (req, res) => {
+export const getNotes = async (req, res, next) => {
   const { favorite, search, tag } = req.query;
   const userId = req.session.userId;
 
@@ -73,14 +75,17 @@ export const getNotes = async (req, res) => {
 
     res.json(result.rows);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error!" });
+    next(error);
   }
 };
 
-export const getNoteById = async (req, res) => {
+export const getNoteById = async (req, res, next) => {
   const id = req.params.id;
   const userId = req.session.userId;
+
+  if (!isValidId(id)) {
+    return res.status(400).json({ error: "Invalid note ID" });
+  }
   try {
     const note = await getNoteWithTags(pool, id, userId);
 
@@ -90,27 +95,18 @@ export const getNoteById = async (req, res) => {
 
     res.json(note);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error!" });
+    next(error);
   }
 };
 
-export const addNote = async (req, res) => {
+export const addNote = async (req, res, next) => {
   const content = req.body.content;
   const tags = req.body.tags;
   const favorite = req.body.favorite;
   const userId = req.session.userId;
 
-  if (
-    typeof content !== "string" ||
-    !Array.isArray(tags) ||
-    typeof favorite !== "boolean"
-  ) {
+  if (!validateNoteData(content, tags, favorite)) {
     return res.status(400).json({ error: "Invalid note data" });
-  }
-
-  if (tags.some((tag) => typeof tag !== "string" || tag.trim() === "")) {
-    return res.status(400).json({ error: "Invalid tag data" });
   }
 
   const cleanTags = tags.map((tag) => tag.trim());
@@ -144,8 +140,7 @@ export const addNote = async (req, res) => {
     if (client) {
       await client.query("ROLLBACK");
     }
-    console.log(error);
-    res.status(500).json({ error: "Internal server error!" });
+    next(error);
   } finally {
     if (client) {
       client.release();
@@ -153,23 +148,19 @@ export const addNote = async (req, res) => {
   }
 };
 
-export const editNote = async (req, res) => {
-  const id = Number(req.params.id);
+export const editNote = async (req, res, next) => {
+  const id = req.params.id;
   const content = req.body.content;
   const tags = req.body.tags;
   const favorite = req.body.favorite;
   const userId = req.session.userId;
 
-  if (
-    typeof content !== "string" ||
-    !Array.isArray(tags) ||
-    typeof favorite !== "boolean"
-  ) {
-    return res.status(400).json({ error: "Invalid note data" });
+  if (!isValidId(id)) {
+    return res.status(400).json({ error: "Invalid note ID" });
   }
 
-  if (tags.some((tag) => typeof tag !== "string" || tag.trim() === "")) {
-    return res.status(400).json({ error: "Invalid tag data" });
+  if (!validateNoteData(content, tags, favorite)) {
+    return res.status(400).json({ error: "Invalid note data" });
   }
 
   const cleanTags = tags.map((tag) => tag.trim());
@@ -213,8 +204,7 @@ export const editNote = async (req, res) => {
     if (client) {
       await client.query("ROLLBACK");
     }
-    console.log(error);
-    res.status(500).json({ error: "Internal server error!" });
+    next(error);
   } finally {
     if (client) {
       client.release();
@@ -222,9 +212,13 @@ export const editNote = async (req, res) => {
   }
 };
 
-export const deleteNote = async (req, res) => {
+export const deleteNote = async (req, res, next) => {
   const id = req.params.id;
   const userId = req.session.userId;
+
+  if (!isValidId(id)) {
+    return res.status(400).json({ error: "Invalid note ID" });
+  }
 
   try {
     const result = await pool.query(
@@ -239,7 +233,6 @@ export const deleteNote = async (req, res) => {
 
     res.status(204).end();
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 };
