@@ -8,6 +8,9 @@ describe("Notes CRUD API", () => {
   const email = "note-test@test.com";
   const password = "passwordtest1234";
 
+  const otherAgent = request.agent(app);
+  const otherEmail = "ownership-test@test.com";
+
   let userId;
 
   beforeAll(async () => {
@@ -43,6 +46,32 @@ describe("Notes CRUD API", () => {
       .send({ email, password });
 
     expect(loginResponse.status).toBe(200);
+
+    const otherUser = await pool.query(
+      "SELECT id FROM users WHERE email = $1",
+      [otherEmail],
+    );
+
+    if (otherUser.rows.length > 0) {
+      const otherUserId = otherUser.rows[0].id;
+
+      await pool.query("DELETE FROM notes WHERE user_id = $1", [otherUserId]);
+      await pool.query("DELETE FROM users WHERE id = $1", [otherUserId]);
+    }
+
+    const registerOther = await request(app).post("/api/auth/register").send({
+      name: "Other User",
+      email: otherEmail,
+      password,
+    });
+
+    expect(registerOther.status).toBe(201);
+
+    const loginOther = await otherAgent
+      .post("/api/auth/login")
+      .send({ email: otherEmail, password });
+
+    expect(loginOther.status).toBe(200);
   });
 
   beforeEach(async () => {
@@ -160,5 +189,54 @@ describe("Notes CRUD API", () => {
     const getResponse = await agent.get(`/api/notes/${noteId}`);
 
     expect(getResponse.status).toBe(404);
+  });
+
+  it("prevents another user from accessing a note", async () => {
+    const createResponse = await agent.post("/api/notes").send({
+      content: "Private note",
+      tags: ["private"],
+      favorite: false,
+    });
+
+    expect(createResponse.status).toBe(201);
+
+    const noteId = createResponse.body.id;
+
+    const readResponse = await otherAgent.get(`/api/notes/${noteId}`);
+    expect(readResponse.status).toBe(404);
+
+    const updateResponse = await otherAgent.put(`/api/notes/${noteId}`).send({
+      content: "Hacked!",
+      tags: ["changed"],
+      favorite: true,
+    });
+
+    expect(updateResponse.status).toBe(404);
+
+    const deleteResponse = await otherAgent.delete(`/api/notes/${noteId}`);
+    expect(deleteResponse.status).toBe(404);
+
+    const originalResponse = await agent.get(`/api/notes/${noteId}`);
+
+    expect(originalResponse.status).toBe(200);
+    expect(originalResponse.body.content).toBe("Private note");
+    expect(originalResponse.body.tags).toEqual(["private"]);
+    expect(originalResponse.body.favorite).toBe(false);
+  });
+
+  it("rejects invalid note data", async () => {
+    const response = await agent.post("/api/notes").send({
+      content: 123,
+      tags: "testing",
+      favorite: "yes",
+    });
+
+    expect(response.status).toBe(400);
+  });
+
+  it("rejects an invalid note ID", async () => {
+    const response = await agent.get("/api/notes/duck");
+
+    expect(response.status).toBe(400);
   });
 });
