@@ -129,7 +129,7 @@ describe("Notes CRUD API", () => {
       .send({ content: editContent, tags: editTags, favorite: editFavorite });
 
     expect(editNote.status).toBe(200);
-    expect(editNote.body.content).toEqual(editContent);
+    expect(editNote.body.content).toBe(editContent);
     expect(editNote.body.tags).toEqual(editTags);
     expect(editNote.body.favorite).toBe(editFavorite);
 
@@ -139,5 +139,26 @@ describe("Notes CRUD API", () => {
     expect(updatedResponse.body.content).toBe(editContent);
     expect(updatedResponse.body.tags).toEqual(editTags);
     expect(updatedResponse.body.favorite).toBe(editFavorite);
+  });
+
+  it("deletes a note successfully", async () => {
+    const note = {
+      content: "# Delete test",
+      tags: ["delete"],
+      favorite: false,
+    };
+
+    const createResponse = await agent.post("/api/notes").send(note);
+
+    expect(createResponse.status).toBe(201);
+
+    const noteId = createResponse.body.id;
+    const deleteResponse = await agent.delete(`/api/notes/${noteId}`);
+
+    expect(deleteResponse.status).toBe(204);
+
+    const getResponse = await agent.get(`/api/notes/${noteId}`);
+
+    expect(getResponse.status).toBe(404);
   });
 });
