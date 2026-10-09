@@ -239,4 +239,17 @@ describe("Notes CRUD API", () => {
 
     expect(response.status).toBe(400);
   });
+
+  it("rejects requests from an unauthorized origin", async () => {
+    const response = await agent
+      .post("/api/notes")
+      .set("Origin", "https://malicious-example.com")
+      .send({
+        content: "This should not be created",
+        tags: [],
+        favorite: false,
+      });
+
+    expect(response.status).toBe(403);
+  });
 });

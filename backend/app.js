@@ -4,10 +4,20 @@ import authRouter from "./routes/auth.js";
 import cors from "cors";
 import session from "express-session";
 import errorHandler from "./middleware/errorHandler.js";
+import authLimiter from "./middleware/authLimiter.js";
+import helmet from "helmet";
+import checkOrigin from "./middleware/checkOrigin.js";
 
 const app = express();
+app.use(helmet());
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_ORIGIN,
+    credentials: true,
+  }),
+);
+const isProduction = process.env.NODE_ENV === "production";
 
 app.use((req, res, next) => {
   console.log(req.method + " " + req.url);
@@ -21,13 +31,19 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: isProduction,
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24,
     },
   }),
 );
 
-app.use("/api/notes", notesRouter);
+app.use(checkOrigin);
 
+app.use("/api/auth/login", authLimiter);
+app.use("/api/auth/register", authLimiter);
+
+app.use("/api/notes", notesRouter);
 app.use("/api/auth", authRouter);
 
 app.use((req, res) => {
