@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Primary Colours */
+  --color-primary: #0d4fff;
+  --color-primary-hover: #003dd9;
+  --color-primary-light: #e8f0ff;
+
+  /* Background Colours */
+  --color-background: #ffffff;
+  --color-background-secondary: #f8faff;
+  --color-sidebar: #f4f7fc;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f5ff;
+  --color-selected: #e4edff;
+
+  /* Text Colours */
+  --color-text-primary: #0b1530;
+  --color-text-secondary: #405477;
+  --color-text-muted: #71809b;
+  --color-text-inverse: #ffffff;
+
+  /* Borders */
+  --color-border: #e2e8f2;
+  --color-border-focus: #0d4fff;
+
+  /* Status Colours */
+  --color-error: #dc3545;
+  --color-success: #16a34a;
+
+  /* Typography */
+  --font-family: "Inter", Arial, sans-serif;
+
+  /* Border Radius */
+
+  --radius-md: 8px;
+
+  /* Shadows */
+
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+
+  /* Layout */
+  --sidebar-width: 220px;
+  --notes-list-width: 340px;
+
+  /* Transitions */
+  --transition-normal: 250ms ease;
+}
+
+/* Global */
+
+html {
+  font-size: 62.5%;
+}
+
+*::before,
+*,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  font-family: var(--font-family);
+}
+
+/* General tags */
+
+img {
+  width: 100%;
+}
+
+ul {
+  list-style: none;
+}
