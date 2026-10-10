@@ -1,0 +1,19 @@
+.landing-navbar {
+  width: 90%;
+  padding: 2.4rem 0;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landing-navbar__logo {
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+
+.landing-navbar__list {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+}

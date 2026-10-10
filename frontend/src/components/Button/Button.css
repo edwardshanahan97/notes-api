@@ -1,0 +1,14 @@
+.button {
+  font-size: 1.6rem;
+}
+
+.button--primary {
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+}
+
+.button--primary:hover {
+  background-color: var(--color-primary-hover);
+}
