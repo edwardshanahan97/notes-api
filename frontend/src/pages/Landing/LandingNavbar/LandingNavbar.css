@@ -1,7 +1,8 @@
 .landing-navbar {
-  width: 90%;
   padding: 2.4rem 0;
+}
 
+.landing-navbar .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,7 +21,6 @@
 
 @media (min-width: 768px) {
   .landing-navbar {
-    width: 90%;
     padding: 3.2rem 0;
     margin: 0 auto;
     display: flex;
