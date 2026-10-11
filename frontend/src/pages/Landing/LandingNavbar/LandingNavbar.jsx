@@ -9,7 +9,7 @@ const LandingNavbar = () => {
 
       <ul className="landing-navbar__list">
         <li>
-          <Button className="button--text" text="Log in" link="/login" />
+          <Button className="button--outline" text="Log in" link="/login" />
         </li>
 
         <li>
