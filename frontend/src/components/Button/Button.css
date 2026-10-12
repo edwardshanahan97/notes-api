@@ -2,11 +2,19 @@
   font-size: 1.4rem;
   border-radius: var(--radius);
   border: 1px solid var(--color-primary);
-  padding: 0.8rem 1.4rem;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1.2rem;
+}
+
+.button--small {
+  padding: 0.8rem 1.4rem;
+}
+
+.button--large {
+  font-size: 1.6rem;
+  padding: 1.6rem 1.4rem;
 }
 
 .button--primary {

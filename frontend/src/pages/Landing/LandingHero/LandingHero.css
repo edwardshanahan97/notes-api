@@ -1,0 +1,44 @@
+.landing-hero {
+  position: relative;
+  overflow: hidden;
+  margin-top: 5rem;
+}
+
+.landing-hero img {
+  border-radius: var(--radius);
+  margin-top: 2.4rem;
+}
+
+.circle {
+  background-color: var(--color-primary-light);
+  border-radius: 50%;
+  position: absolute;
+  width: 25rem;
+  height: 25rem;
+  display: none;
+  z-index: -1;
+}
+
+.circle--left {
+  top: 15rem;
+  left: -10rem;
+}
+
+.circle--right {
+  top: 0;
+  right: -10rem;
+}
+
+@media (min-width: 768px) {
+  .landing-hero__text {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .circle {
+    display: block;
+  }
+}

@@ -11,12 +11,16 @@ const LandingNavbar = () => {
 
         <ul className="landing-navbar__list">
           <li>
-            <Button className="button--outline" text="Log in" link="/login" />
+            <Button
+              className="button--outline button--small"
+              text="Log in"
+              link="/login"
+            />
           </li>
 
           <li>
             <Button
-              className="button--primary"
+              className="button--primary button--small"
               text="Sign Up"
               link="/register"
             />
