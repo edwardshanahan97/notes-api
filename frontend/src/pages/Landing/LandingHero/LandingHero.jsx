@@ -12,14 +12,16 @@ const LandingHero = () => {
           <h1>
             Write. Organise. <span>Remember.</span>
           </h1>
+
           <p className="lead">
             A simple Markdown notes app for keeping everything in one place.
           </p>
+
           <Button
             className="button--primary button--large"
             text={
               <>
-                Start Writing <MoveRight size={18} strokeWidth={1.5} />
+                Start Writing <MoveRight />
               </>
             }
             link="/register"
@@ -27,6 +29,7 @@ const LandingHero = () => {
         </div>
 
         <div className="circle circle--left"></div>
+
         <div className="circle circle--right"></div>
 
         <img src={HeroImg} alt="Notes app" />

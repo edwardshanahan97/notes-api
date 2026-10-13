@@ -1,3 +1,4 @@
+import LandingFeatures from "./LandingFeatures/LandingFeatures";
 import LandingHero from "./LandingHero/LandingHero";
 import LandingNavbar from "./LandingNavbar/LandingNavbar";
 
@@ -6,6 +7,7 @@ const LandingPage = () => {
     <>
       <LandingNavbar />
       <LandingHero />
+      <LandingFeatures />
     </>
   );
 };
