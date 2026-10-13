@@ -1,7 +1,8 @@
-.landing-features .container {
+.landing-features {
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  margin-bottom: 3rem;
 }
 
 .landing-features__group {
@@ -25,19 +26,19 @@
 }
 
 .landing-features p {
+  color: var(--color-text-muted);
   font-size: 1.4rem;
 }
 
 @media (min-width: 768px) {
-  .landing-features .container {
-    display: flex;
+  .landing-features {
     flex-direction: row;
     justify-content: space-around;
     gap: 0;
   }
 
   .landing-features__group {
-    flex-basis: 20%;
+    flex-basis: 30%;
     flex-direction: column;
     justify-content: center;
     text-align: center;
@@ -46,5 +47,17 @@
 
   .landing-features__icon {
     margin: 0 auto;
+  }
+}
+
+@media (min-width: 1040px) {
+  .landing-features__icon {
+    width: 8rem;
+    height: 8rem;
+  }
+
+  .landing-features__icon svg {
+    width: 4rem;
+    height: 4rem;
   }
 }

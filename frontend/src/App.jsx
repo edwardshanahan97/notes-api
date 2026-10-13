@@ -3,9 +3,11 @@ import LandingPage from "./pages/Landing/LandingPage";
 
 const app = () => {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-    </Routes>
+    <div className="app">
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+      </Routes>
+    </div>
   );
 };
 

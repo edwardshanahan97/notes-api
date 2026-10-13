@@ -1,12 +1,12 @@
 .landing-hero {
-  position: relative;
-  overflow: hidden;
-  margin-top: 5rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  overflow-x: hidden;
 }
 
 .landing-hero img {
   border-radius: var(--radius);
-  margin-top: 2.4rem;
+  margin-top: 1.6rem;
 }
 
 .circle {
@@ -20,12 +20,12 @@
 }
 
 .circle--left {
-  top: 15rem;
+  top: 20rem;
   left: -10rem;
 }
 
 .circle--right {
-  top: 0;
+  top: 60rem;
   right: -10rem;
 }
 

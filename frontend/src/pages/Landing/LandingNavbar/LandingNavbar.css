@@ -1,11 +1,8 @@
 .landing-navbar {
-  padding: 2.4rem 0;
-}
-
-.landing-navbar .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 2.4rem 0 0 0;
 }
 
 .landing-navbar__logo {
@@ -13,10 +10,16 @@
   font-weight: 700;
 }
 
+.landing-navbar__logo:focus {
+  outline: 1px solid var(--color-primary);
+  outline-offset: 4px;
+  border-radius: var(--radius);
+}
+
 .landing-navbar__list {
   display: flex;
   align-items: center;
-  gap: 2.4rem;
+  gap: 1.6rem;
 }
 
 @media (min-width: 768px) {
@@ -26,5 +29,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .landing-navbar__list {
+    gap: 2.4rem;
   }
 }

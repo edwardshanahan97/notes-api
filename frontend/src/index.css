@@ -68,6 +68,11 @@ body {
   line-height: 1.6;
 }
 
+.app {
+  position: relative;
+  overflow-x: hidden;
+}
+
 /* General tags */
 
 img {
@@ -100,7 +105,7 @@ h3 {
 h1 {
   font-size: 3.2rem;
   width: 50%;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.2rem;
 }
 
 h2 {
@@ -112,9 +117,9 @@ h1 span {
 }
 
 .lead {
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   font-size: 1.6rem;
-  margin-bottom: 2.4rem;
+  margin-bottom: 1.2rem;
 }
 
 @media (min-width: 768px) {
@@ -131,5 +136,6 @@ h1 span {
 @media (min-width: 1040px) {
   h2 {
     font-size: 2.4rem;
+    margin-bottom: 0.8rem;
   }
 }

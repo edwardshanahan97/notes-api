@@ -1,32 +1,29 @@
 import "./LandingNavbar.css";
 import Button from "../../../components/Button/Button";
 import { Link } from "react-router";
-import Container from "../../../components/Container/Container";
 
 const LandingNavbar = () => {
   return (
     <nav className="landing-navbar">
-      <Container>
-        <Link className="landing-navbar__logo">Notes</Link>
+      <Link className="landing-navbar__logo">Notes</Link>
 
-        <ul className="landing-navbar__list">
-          <li>
-            <Button
-              className="button--outline button--small"
-              text="Log in"
-              link="/login"
-            />
-          </li>
+      <ul className="landing-navbar__list">
+        <li>
+          <Button
+            className="button--outline button--small"
+            text="Log in"
+            link="/login"
+          />
+        </li>
 
-          <li>
-            <Button
-              className="button--primary button--small"
-              text="Sign Up"
-              link="/register"
-            />
-          </li>
-        </ul>
-      </Container>
+        <li>
+          <Button
+            className="button--primary button--small"
+            text="Sign Up"
+            link="/register"
+          />
+        </li>
+      </ul>
     </nav>
   );
 };
