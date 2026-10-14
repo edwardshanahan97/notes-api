@@ -26,10 +26,6 @@ const LandingHero = () => {
         />
       </div>
 
-      <div className="circle circle--left"></div>
-
-      <div className="circle circle--right"></div>
-
       <img src={HeroImg} alt="Notes app" />
     </div>
   );

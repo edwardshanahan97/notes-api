@@ -1,11 +1,11 @@
 import "./LandingNavbar.css";
 import Button from "../../../components/Button/Button";
-import { Link } from "react-router";
+import Logo from "../../../components/Logo/Logo";
 
 const LandingNavbar = () => {
   return (
     <nav className="landing-navbar">
-      <Link className="landing-navbar__logo">Notes</Link>
+      <Logo link="/" />
 
       <ul className="landing-navbar__list">
         <li>

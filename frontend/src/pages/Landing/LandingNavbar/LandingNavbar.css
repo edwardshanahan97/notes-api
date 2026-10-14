@@ -5,17 +5,6 @@
   padding: 2.4rem 0 0 0;
 }
 
-.landing-navbar__logo {
-  font-size: 2.4rem;
-  font-weight: 700;
-}
-
-.landing-navbar__logo:focus {
-  outline: 1px solid var(--color-primary);
-  outline-offset: 4px;
-  border-radius: var(--radius);
-}
-
 .landing-navbar__list {
   display: flex;
   align-items: center;

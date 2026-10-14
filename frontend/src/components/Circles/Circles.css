@@ -1,0 +1,25 @@
+.circle {
+  background-color: var(--color-primary-light);
+  border-radius: 50%;
+  position: absolute;
+  width: 25rem;
+  height: 25rem;
+  display: none;
+  z-index: -1;
+}
+
+.circle--left {
+  top: 20rem;
+  left: -10rem;
+}
+
+.circle--right {
+  top: 60rem;
+  right: -10rem;
+}
+
+@media (min-width: 768px) {
+  .circle {
+    display: block;
+  }
+}
