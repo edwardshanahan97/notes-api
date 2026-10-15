@@ -39,7 +39,7 @@ const LoginPage = () => {
 
       navigate("/notes");
     } catch (error) {
-      console.error("Request Failded: " + error);
+      console.error("Request Failed: " + error);
 
       setError("Something went wrong. Please try again.");
     } finally {
