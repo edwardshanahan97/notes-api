@@ -33,7 +33,6 @@ const Register = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.log(data.error);
         setError(data.error);
         return;
       }

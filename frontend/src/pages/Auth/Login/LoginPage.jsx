@@ -32,12 +32,11 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.log(data.error);
         setError(data.error);
         return;
       }
 
-      navigate("/notes");
+      navigate("/notes", { replace: true });
     } catch (error) {
       console.error("Request Failed: " + error);
 
