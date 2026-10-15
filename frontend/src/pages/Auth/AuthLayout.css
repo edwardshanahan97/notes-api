@@ -40,6 +40,7 @@
 
 .form__input {
   border: 1px solid var(--color-border);
+  border-radius: var(--radius);
   padding: 1.6rem;
   display: block;
   margin-top: 0.4rem;
@@ -61,6 +62,11 @@
 
 .form__link span {
   color: var(--color-primary);
+}
+
+.form__error {
+  color: var(--color-error);
+  font-size: 1.4rem;
 }
 
 @media (min-width: 768px) {

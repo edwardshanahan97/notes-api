@@ -1,13 +1,15 @@
 import "./Button.css";
 import { Link } from "react-router";
 
-const Button = ({ text, link, className }) => {
+const Button = ({ text, link, className, type, disabled }) => {
   return link ? (
     <Link className={`button ${className}`} to={link}>
       {text}
     </Link>
   ) : (
-    <button className={`button ${className}`}>{text}</button>
+    <button type={type} className={`button ${className}`} disabled={disabled}>
+      {text}
+    </button>
   );
 };
 

@@ -7,6 +7,7 @@ const Input = ({ name, type, placeholder }) => {
         type={type}
         placeholder={placeholder}
         name={name}
+        required
       />
     </label>
   );

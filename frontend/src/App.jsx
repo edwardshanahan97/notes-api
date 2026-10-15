@@ -3,6 +3,7 @@ import LandingPage from "./pages/Landing/LandingPage";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import LoginPage from "./pages/Auth/Login/LoginPage";
 import Register from "./pages/Auth/Register/RegisterPage";
+import Notes from "./pages/Notes/Notes";
 
 const app = () => {
   return (
@@ -14,6 +15,8 @@ const app = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<LoginPage />} />
         </Route>
+
+        <Route path="/notes" element={<Notes />} />
       </Routes>
     </div>
   );
