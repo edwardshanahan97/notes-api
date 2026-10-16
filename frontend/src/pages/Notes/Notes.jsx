@@ -19,16 +19,7 @@ const Notes = () => {
       console.error("Logout request failed:", error);
     }
   };
-  return (
-    <div>
-      <Button
-        text="Logout"
-        className="button--primary button--large"
-        type="button"
-        onClick={handleLogout}
-      />
-    </div>
-  );
+  return <div>Notes</div>;
 };
 
 export default Notes;
