@@ -4,7 +4,9 @@ import AuthLayout from "./pages/Auth/AuthLayout";
 import LoginPage from "./pages/Auth/Login/LoginPage";
 import Register from "./pages/Auth/Register/RegisterPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import Notes from "./pages/Notes/Notes";
+
+import NotesLayout from "./pages/Notes/NotesLayout";
+import NotesList from "./pages/Notes/NotesList/NotesList";
 
 const app = () => {
   return (
@@ -18,7 +20,9 @@ const app = () => {
         </Route>
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/notes" element={<Notes />} />
+          <Route element={<NotesLayout />}>
+            <Route path="/notes" element={<NotesList />} />
+          </Route>
         </Route>
       </Routes>
     </div>
