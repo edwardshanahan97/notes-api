@@ -1,0 +1,40 @@
+.note-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.note-card__group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.note-card__title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note-card__preview {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+.note-card svg {
+  width: 1.6rem;
+}
+
+.note-card__date {
+  color: var(--color-text-muted);
+  text-align: right;
+}
