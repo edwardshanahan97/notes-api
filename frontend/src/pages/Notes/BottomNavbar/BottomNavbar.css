@@ -22,3 +22,9 @@
   width: 2.4rem;
   height: 2.4rem;
 }
+
+@media (min-width: 768px) {
+  .bottom-navbar {
+    display: none;
+  }
+}

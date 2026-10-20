@@ -1,3 +1,19 @@
-.notes-layout {
-  padding: 1.6rem 1.6rem 10rem 1.6rem;
+.notes-layout__content {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .notes-layout {
+    display: flex;
+    padding: 0;
+    height: 100dvh;
+  }
+
+  .notes-layout__content {
+    width: var(--notes-list-width);
+    flex-shrink: 0;
+    padding: 0;
+    overflow-y: auto;
+  }
 }

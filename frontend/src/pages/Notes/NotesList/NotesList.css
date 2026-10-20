@@ -1,5 +1,15 @@
 .notes-list {
+  padding: 1.6rem 1.6rem 10rem 1.6rem;
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.6rem;
+}
+
+@media (min-width: 768px) {
+  .notes-layout__content {
+    width: var(--notes-list-width);
+    flex-shrink: 0;
+    padding: 0;
+    overflow-y: auto;
+  }
 }
