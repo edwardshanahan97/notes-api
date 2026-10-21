@@ -11,8 +11,8 @@
   }
 
   .notes-layout__content {
-    width: var(--notes-list-width);
-    flex-shrink: 0;
+    min-width: 0;
+    flex: 1;
     padding: 0;
     overflow-y: auto;
   }

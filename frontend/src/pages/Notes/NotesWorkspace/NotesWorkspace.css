@@ -1,0 +1,37 @@
+.notes-workspace {
+}
+
+.notes-workspace__editor {
+  display: none;
+}
+
+.notes-workspace--selected .notes-workspace__editor {
+  display: block;
+}
+
+.notes-workspace--selected .notes-workspace__list {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .notes-workspace {
+    display: flex;
+    height: 100%;
+  }
+  .notes-workspace__list {
+    width: var(--notes-list-width);
+    display: block;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .notes-workspace--selected .notes-workspace__list {
+    display: block;
+  }
+  .notes-workspace__editor {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+  }
+}
