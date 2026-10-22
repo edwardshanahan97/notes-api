@@ -1,16 +1,14 @@
-.notes-workspace {
-}
-
 .notes-workspace__editor {
   display: none;
 }
 
-.notes-workspace--selected .notes-workspace__editor {
-  display: block;
-}
-
 .notes-workspace--selected .notes-workspace__list {
   display: none;
+}
+
+.notes-workspace--selected .notes-workspace__editor {
+  display: flex;
+  min-height: calc(100dvh - 13.2rem);
 }
 
 @media (min-width: 768px) {
@@ -18,20 +16,27 @@
     display: flex;
     height: 100%;
   }
+
   .notes-workspace__list {
-    width: var(--notes-list-width);
     display: block;
-    overflow-y: auto;
+    width: var(--notes-list-width);
     flex-shrink: 0;
+    overflow-y: auto;
   }
 
   .notes-workspace--selected .notes-workspace__list {
     display: block;
   }
+
   .notes-workspace__editor {
-    display: block;
+    display: flex;
     flex: 1;
     min-width: 0;
+    min-height: 0;
     overflow-y: auto;
+  }
+
+  .notes-workspace--selected .notes-workspace__editor {
+    min-height: 0;
   }
 }

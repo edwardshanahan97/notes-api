@@ -1,0 +1,30 @@
+.notes-editor {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.notes-editor__empty {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.notes-editor__empty h2 {
+  color: var(--color-text-muted);
+}
+
+.notes-editor__empty svg {
+  stroke: var(--color-text-muted);
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-bottom: 1.6rem;
+}
+
+.notes-editor__empty p {
+  color: var(--color-text-muted);
+  font-size: 1.4rem;
+}
