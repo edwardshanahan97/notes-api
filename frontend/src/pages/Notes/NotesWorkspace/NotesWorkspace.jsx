@@ -12,7 +12,7 @@ const NotesWorkspace = () => {
       </div>
 
       <div className="notes-workspace__editor">
-        <NotesEditor />
+        <NotesEditor key={id ?? "empty"} />
       </div>
     </div>
   );

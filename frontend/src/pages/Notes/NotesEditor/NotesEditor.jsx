@@ -1,16 +1,18 @@
 import "./NotesEditor.css";
-import notesData from "../../../data/notesData";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { useParams } from "react-router";
+import remarkGfm from "remark-gfm";
 import { FilePenLine } from "lucide-react";
+import notesData from "../../../data/notesData";
+import Button from "../../../components/Button/Button";
 
 const NotesEditor = () => {
   const { id } = useParams();
-
   const noteId = Number(id);
-
   const note = notesData.find((note) => noteId === note.id);
-
-  console.log(note);
+  const [content, setContent] = useState(note?.content ?? "");
+  const [mode, setMode] = useState("edit");
 
   if (!id) {
     return (
@@ -27,7 +29,37 @@ const NotesEditor = () => {
   } else if (!note) {
     return <h2>Note not found</h2>;
   } else {
-    return <div className="notes-editor">{note.content}</div>;
+    return (
+      <div className="notes-editor">
+        <div className="notes-editor__buttons">
+          <Button
+            text="Edit"
+            className={`${mode === "edit" ? "button--primary" : "button--outline"} button--large`}
+            type="button"
+            onClick={() => setMode("edit")}
+          />
+
+          <Button
+            text="Preview"
+            className={`${mode === "preview" ? "button--primary" : "button--outline"} button--large`}
+            type="button"
+            onClick={() => setMode("preview")}
+          />
+        </div>
+        {mode === "edit" && (
+          <textarea
+            onChange={(event) => setContent(event.target.value)}
+            value={content}
+          ></textarea>
+        )}
+
+        {mode === "preview" && (
+          <div className="notes-editor__preview">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+          </div>
+        )}
+      </div>
+    );
   }
 };
 
