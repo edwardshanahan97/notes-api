@@ -32,10 +32,7 @@ const NotesEditor = () => {
     return (
       <div className="notes-editor">
         <Link to="/notes">
-          <ArrowLeft
-            className="notes-editor__back"
-            onClick={() => navigate("/notes")}
-          />
+          <ArrowLeft className="notes-editor__back" />
         </Link>
         <div className="notes-editor__buttons">
           <Button

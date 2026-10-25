@@ -5,11 +5,28 @@
   gap: 1.6rem;
 }
 
+.notes-list__empty {
+  text-align: center;
+  margin-top: 2.4rem;
+}
+
+.notes-list__empty h2 {
+  color: var(--color-text-muted);
+}
+
+.notes-list .lead {
+  width: 100%;
+}
+
 @media (min-width: 768px) {
   .notes-layout__content {
     width: var(--notes-list-width);
     flex-shrink: 0;
     padding: 0;
     overflow-y: auto;
+  }
+
+  .notes-list__empty {
+    text-align: left;
   }
 }
