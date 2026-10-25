@@ -1,9 +1,9 @@
 import "./NotesEditor.css";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { useParams } from "react-router";
+import { useParams, Link } from "react-router";
 import remarkGfm from "remark-gfm";
-import { FilePenLine } from "lucide-react";
+import { ArrowLeft, FilePenLine } from "lucide-react";
 import notesData from "../../../data/notesData";
 import Button from "../../../components/Button/Button";
 
@@ -31,6 +31,12 @@ const NotesEditor = () => {
   } else {
     return (
       <div className="notes-editor">
+        <Link to="/notes">
+          <ArrowLeft
+            className="notes-editor__back"
+            onClick={() => navigate("/notes")}
+          />
+        </Link>
         <div className="notes-editor__buttons">
           <Button
             text="Edit"

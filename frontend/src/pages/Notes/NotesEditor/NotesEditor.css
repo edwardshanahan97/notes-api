@@ -7,6 +7,12 @@
   padding: 1.6rem;
 }
 
+.notes-editor__back {
+  stroke: var(--color-text-muted);
+  width: 3.2rem;
+  height: 3.2rem;
+}
+
 .notes-editor__buttons {
   display: flex;
   justify-content: flex-end;
@@ -206,4 +212,10 @@
 .notes-editor__empty p {
   color: var(--color-text-muted);
   font-size: 1.4rem;
+}
+
+@media (min-width: 768px) {
+  .notes-editor__back {
+    display: none;
+  }
 }

@@ -1,33 +1,42 @@
 import "./BottomNavbar.css";
-import { NavLink } from "react-router";
+import { NavLink, useMatch } from "react-router";
 import { NotebookPen, Star, Tags, UserRound } from "lucide-react";
 
 const BottomNavbar = () => {
+  const match = useMatch("/notes/:id");
+
   return (
-    <nav className="bottom-navbar">
-      <NavLink to="/notes" className="bottom-navbar__link" aria-label="Notes">
-        <NotebookPen />
-      </NavLink>
-      <NavLink to="/tags" end className="bottom-navbar__link" aria-label="Tags">
-        <Tags />
-      </NavLink>
-      <NavLink
-        to="/favourites"
-        end
-        className="bottom-navbar__link"
-        aria-label="Favourites"
-      >
-        <Star />
-      </NavLink>
-      <NavLink
-        to="/profile"
-        end
-        className="bottom-navbar__link"
-        aria-label="Profile"
-      >
-        <UserRound />
-      </NavLink>
-    </nav>
+    !match && (
+      <nav className="bottom-navbar">
+        <NavLink to="/notes" className="bottom-navbar__link" aria-label="Notes">
+          <NotebookPen />
+        </NavLink>
+        <NavLink
+          to="/tags"
+          end
+          className="bottom-navbar__link"
+          aria-label="Tags"
+        >
+          <Tags />
+        </NavLink>
+        <NavLink
+          to="/favourites"
+          end
+          className="bottom-navbar__link"
+          aria-label="Favourites"
+        >
+          <Star />
+        </NavLink>
+        <NavLink
+          to="/profile"
+          end
+          className="bottom-navbar__link"
+          aria-label="Profile"
+        >
+          <UserRound />
+        </NavLink>
+      </nav>
+    )
   );
 };
 
