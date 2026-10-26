@@ -1,14 +1,44 @@
 import "./NotesList.css";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import Button from "../../../components/Button/Button";
 import Search from "../Search/Search";
 import NoteCard from "../NoteCard/NoteCard";
-
-import { useEffect, useState } from "react";
 
 const NotesList = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleAddNote = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/notes/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          content: "",
+          tags: [],
+          favorite: false,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create note");
+      }
+
+      const note = await response.json();
+
+      setNotes((prev) => [note, ...prev]);
+
+      navigate(`/notes/${note.id}`);
+    } catch (error) {
+      console.error("Request Failed: " + error);
+
+      setError(error.message);
+    }
+  };
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -42,6 +72,7 @@ const NotesList = () => {
         text="Add Note"
         className="button--primary button--large"
         type="button"
+        onClick={handleAddNote}
       />
 
       <Search />

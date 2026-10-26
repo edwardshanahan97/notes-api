@@ -1,18 +1,56 @@
 import "./NotesEditor.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { useParams, Link } from "react-router";
 import remarkGfm from "remark-gfm";
+import { useParams, Link } from "react-router";
 import { ArrowLeft, FilePenLine } from "lucide-react";
-import notesData from "../../../data/notesData";
+
 import Button from "../../../components/Button/Button";
 
 const NotesEditor = () => {
   const { id } = useParams();
   const noteId = Number(id);
-  const note = notesData.find((note) => noteId === note.id);
-  const [content, setContent] = useState(note?.content ?? "");
+
+  const [loading, setLoading] = useState(Boolean(id));
+  const [error, setError] = useState("");
+  const [note, setNote] = useState(null);
+
+  const [content, setContent] = useState("");
   const [mode, setMode] = useState("edit");
+
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+
+    const fetchNotes = async () => {
+      try {
+        setLoading(true);
+
+        const response = await fetch(
+          `http://localhost:3000/api/notes/${noteId}`,
+          {
+            credentials: "include",
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch note");
+        }
+
+        const data = await response.json();
+
+        setNote(data);
+        setContent(data.content ?? "");
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotes();
+  }, [id]);
 
   if (!id) {
     return (
@@ -26,6 +64,10 @@ const NotesEditor = () => {
         </div>
       </div>
     );
+  } else if (loading) {
+    return <p>Loading note...</p>;
+  } else if (error) {
+    return <p role="alert">{error}</p>;
   } else if (!note) {
     return <h2>Note not found</h2>;
   } else {
@@ -34,7 +76,15 @@ const NotesEditor = () => {
         <Link to="/notes">
           <ArrowLeft className="notes-editor__back" />
         </Link>
+
         <div className="notes-editor__buttons">
+          <Button
+            text="Save Note"
+            className={"button--outline button--large"}
+            type="button"
+            onClick={() => setMode("edit")}
+          />
+
           <Button
             text="Edit"
             className={`${mode === "edit" ? "button--primary" : "button--outline"} button--large`}
@@ -49,6 +99,7 @@ const NotesEditor = () => {
             onClick={() => setMode("preview")}
           />
         </div>
+
         {mode === "edit" && (
           <textarea
             onChange={(event) => setContent(event.target.value)}
