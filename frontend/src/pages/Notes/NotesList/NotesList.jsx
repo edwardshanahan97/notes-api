@@ -5,7 +5,7 @@ import Button from "../../../components/Button/Button";
 import Search from "../Search/Search";
 import NoteCard from "../NoteCard/NoteCard";
 
-const NotesList = () => {
+const NotesList = ({ refresh }) => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -62,7 +62,7 @@ const NotesList = () => {
     };
 
     fetchNotes();
-  }, []);
+  }, [refresh]);
 
   return (
     <div className="notes-list">

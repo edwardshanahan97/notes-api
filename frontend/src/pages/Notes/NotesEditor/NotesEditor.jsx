@@ -7,7 +7,7 @@ import { ArrowLeft, FilePenLine } from "lucide-react";
 
 import Button from "../../../components/Button/Button";
 
-const NotesEditor = () => {
+const NotesEditor = ({ setRefresh }) => {
   const { id } = useParams();
   const noteId = Number(id);
 
@@ -17,6 +17,36 @@ const NotesEditor = () => {
 
   const [content, setContent] = useState("");
   const [mode, setMode] = useState("edit");
+
+  const handleSave = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/notes/${noteId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            content,
+            tags: note.tags,
+            favorite: note.favorite,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.log("Backend error:", errorData);
+        throw new Error("Failed to save note");
+      }
+
+      console.log("Note saved successfully!");
+
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
     if (!id) {
@@ -82,7 +112,7 @@ const NotesEditor = () => {
             text="Save Note"
             className={"button--outline button--large"}
             type="button"
-            onClick={() => setMode("edit")}
+            onClick={handleSave}
           />
 
           <Button
