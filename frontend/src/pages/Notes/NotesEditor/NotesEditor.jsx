@@ -2,7 +2,7 @@ import "./NotesEditor.css";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { ArrowLeft, FilePenLine } from "lucide-react";
 
 import Button from "../../../components/Button/Button";
@@ -10,13 +10,12 @@ import Button from "../../../components/Button/Button";
 const NotesEditor = ({ setRefresh }) => {
   const { id } = useParams();
   const noteId = Number(id);
-
   const [loading, setLoading] = useState(Boolean(id));
   const [error, setError] = useState("");
   const [note, setNote] = useState(null);
-
   const [content, setContent] = useState("");
   const [mode, setMode] = useState("edit");
+  const navigate = useNavigate();
 
   const handleSave = async () => {
     try {
@@ -35,14 +34,38 @@ const NotesEditor = ({ setRefresh }) => {
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.log("Backend error:", errorData);
         throw new Error("Failed to save note");
       }
 
-      console.log("Note saved successfully!");
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this note?",
+    );
+
+    if (!confirmed) return;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/notes/${noteId}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete note");
+      }
 
       setRefresh((prev) => prev + 1);
+
+      navigate("/notes");
     } catch (error) {
       console.log(error.message);
     }
@@ -113,6 +136,13 @@ const NotesEditor = ({ setRefresh }) => {
             className={"button--outline button--large"}
             type="button"
             onClick={handleSave}
+          />
+
+          <Button
+            text="Delete Note"
+            className={"button--outline button--large"}
+            type="button"
+            onClick={handleDelete}
           />
 
           <Button
