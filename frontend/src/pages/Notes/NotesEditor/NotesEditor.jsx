@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useParams, Link, useNavigate } from "react-router";
-import { ArrowLeft, FilePenLine } from "lucide-react";
+import { ArrowLeft, FilePenLine, Save, Trash2 } from "lucide-react";
 
 import Button from "../../../components/Button/Button";
 
@@ -126,40 +126,69 @@ const NotesEditor = ({ setRefresh }) => {
   } else {
     return (
       <div className="notes-editor">
-        <Link to="/notes">
-          <ArrowLeft className="notes-editor__back" />
-        </Link>
+        <div className="notes-editor__toolbar">
+          <Link
+            to="/notes"
+            className="notes-editor__back-link"
+            aria-label="Back to notes"
+          >
+            <ArrowLeft className="notes-editor__back" />
+          </Link>
 
-        <div className="notes-editor__buttons">
-          <Button
-            text="Save Note"
-            className={"button--outline button--large"}
-            type="button"
-            onClick={handleSave}
-          />
+          <div className="notes-editor__buttons">
+            <div className="notes-editor__actions">
+              <Button
+                text={
+                  <>
+                    <Trash2 aria-hidden="true" />
+                    <span className="notes-editor__action-label">Delete</span>
+                  </>
+                }
+                className="button--danger button--editor-action"
+                type="button"
+                onClick={handleDelete}
+              />
 
-          <Button
-            text="Delete Note"
-            className={"button--outline button--large"}
-            type="button"
-            onClick={handleDelete}
-          />
+              <Button
+                text={
+                  <>
+                    <Save aria-hidden="true" />
+                    <span className="notes-editor__action-label">
+                      Save Note
+                    </span>
+                  </>
+                }
+                className="button--primary button--editor-action"
+                type="button"
+                onClick={handleSave}
+              />
+            </div>
 
-          <Button
-            text="Edit"
-            className={`${mode === "edit" ? "button--primary" : "button--outline"} button--large`}
-            type="button"
-            onClick={() => setMode("edit")}
-          />
+            <div className="notes-editor__mode">
+              <Button
+                text="Edit"
+                className={
+                  mode === "edit"
+                    ? "button--mode button--mode-active"
+                    : "button--mode"
+                }
+                type="button"
+                onClick={() => setMode("edit")}
+              />
 
-          <Button
-            text="Preview"
-            className={`${mode === "preview" ? "button--primary" : "button--outline"} button--large`}
-            type="button"
-            onClick={() => setMode("preview")}
-          />
+              <Button
+                text="Preview"
+                className={
+                  mode === "preview"
+                    ? "button--mode button--mode-active"
+                    : "button--mode"
+                }
+                type="button"
+                onClick={() => setMode("preview")}
+              />
+            </div>
+          </div>
         </div>
-
         {mode === "edit" && (
           <textarea
             onChange={(event) => setContent(event.target.value)}
