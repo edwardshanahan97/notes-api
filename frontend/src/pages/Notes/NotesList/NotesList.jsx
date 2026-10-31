@@ -40,6 +40,45 @@ const NotesList = ({ refresh }) => {
     }
   };
 
+  const handleToggleFavorite = async (noteId) => {
+    const note = notes.find((note) => note.id === noteId);
+
+    try {
+      if (!note) {
+        return;
+      }
+
+      const response = await fetch(
+        `http://localhost:3000/api/notes/${noteId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            content: note.content,
+            tags: note.tags,
+            favorite: !note.favorite,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update favourite");
+      }
+
+      setNotes((prev) =>
+        prev.map((item) =>
+          item.id === noteId ? { ...item, favorite: !note.favorite } : item,
+        ),
+      );
+    } catch (error) {
+      console.error(error.message);
+      setError(error.message);
+    }
+
+    console.log(note);
+  };
+
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -94,6 +133,7 @@ const NotesList = ({ refresh }) => {
             content={content}
             favorite={favorite}
             updated_at={updated_at}
+            handleToggleFavorite={handleToggleFavorite}
           />
         ))
       )}

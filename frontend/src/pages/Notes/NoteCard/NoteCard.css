@@ -3,9 +3,18 @@
   border-radius: var(--radius);
   padding: 1.2rem;
   min-width: 0;
+  position: relative;
+}
+
+.note-card a {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+}
+
+.note-card a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
 .note-card__group {
@@ -13,6 +22,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  padding-right: 3.6rem;
 }
 
 .note-card__title {
@@ -30,8 +40,28 @@
   font-size: 1rem;
 }
 
+.note-card__button {
+  background-color: transparent;
+  cursor: pointer;
+  border: 0;
+  width: 3.2rem;
+  height: 3.2rem;
+  position: absolute;
+  right: 1.2rem;
+  top: 1.2rem;
+}
+
+.note-card__button svg:hover {
+  fill: var(--color-primary);
+}
+
 .note-card svg {
-  width: 1.6rem;
+  width: 2.4rem;
+  stroke: var(--color-primary);
+}
+
+.note-card__button:focus-visible {
+  outline: 2px solid var(--color-primary);
 }
 
 .note-card__date {

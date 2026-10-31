@@ -43,7 +43,6 @@
 }
 
 .notes-editor__mode {
-  background-color: var(--color-sidebar);
   border-radius: var(--radius);
   display: flex;
   width: 100%;
