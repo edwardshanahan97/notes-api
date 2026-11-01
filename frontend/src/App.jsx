@@ -22,6 +22,7 @@ const app = () => {
           <Route element={<NotesLayout />}>
             <Route path="/notes" element={<NotesWorkspace />} />
             <Route path="/notes/:id" element={<NotesWorkspace />} />
+            <Route path="/favorites" element={<NotesWorkspace />} />
           </Route>
         </Route>
       </Routes>

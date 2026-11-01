@@ -12,10 +12,10 @@ const Sidebar = () => {
         <Tags />
       </NavLink>
       <NavLink
-        to="/favourites"
+        to="/favorites"
         end
         className="sidebar__link"
-        aria-label="Favourites"
+        aria-label="favorites"
       >
         <Star />
       </NavLink>

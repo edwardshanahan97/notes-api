@@ -16,8 +16,6 @@ const NoteCard = ({
   const preview = getNotePreview(content);
   const date = formatDate(updated_at);
 
-  console.log(favorite);
-
   return (
     <div className="note-card">
       <button

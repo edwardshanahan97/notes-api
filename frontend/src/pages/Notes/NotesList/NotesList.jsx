@@ -1,15 +1,16 @@
 import "./NotesList.css";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import Button from "../../../components/Button/Button";
 import Search from "../Search/Search";
 import NoteCard from "../NoteCard/NoteCard";
 
-const NotesList = ({ refresh }) => {
+const NotesList = ({ refresh, setRefresh }) => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleAddNote = async () => {
     try {
@@ -66,25 +67,32 @@ const NotesList = ({ refresh }) => {
         throw new Error("Failed to update favourite");
       }
 
-      setNotes((prev) =>
-        prev.map((item) =>
-          item.id === noteId ? { ...item, favorite: !note.favorite } : item,
-        ),
-      );
+      if (location.pathname === "/favorites") {
+        setNotes((prev) => prev.filter((item) => item.id !== noteId));
+      } else {
+        setNotes((prev) =>
+          prev.map((item) =>
+            item.id === noteId ? { ...item, favorite: !note.favorite } : item,
+          ),
+        );
+      }
     } catch (error) {
       console.error(error.message);
       setError(error.message);
     }
-
-    console.log(note);
   };
 
   useEffect(() => {
     const fetchNotes = async () => {
+      const isfavorite =
+        location.pathname === "/favorites" ? "?favorite=true" : "";
       try {
-        const response = await fetch("http://localhost:3000/api/notes", {
-          credentials: "include",
-        });
+        const response = await fetch(
+          `http://localhost:3000/api/notes${isfavorite}`,
+          {
+            credentials: "include",
+          },
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch notes");
@@ -101,7 +109,7 @@ const NotesList = ({ refresh }) => {
     };
 
     fetchNotes();
-  }, [refresh]);
+  }, [refresh, location.pathname]);
 
   return (
     <div className="notes-list">

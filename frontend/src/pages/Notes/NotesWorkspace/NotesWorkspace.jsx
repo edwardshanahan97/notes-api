@@ -11,7 +11,7 @@ const NotesWorkspace = () => {
   return (
     <div className={`notes-workspace ${id ? "notes-workspace--selected" : ""}`}>
       <div className="notes-workspace__list">
-        <NotesList refresh={refresh} />
+        <NotesList refresh={refresh} setRefresh={setRefresh} />
       </div>
 
       <div className="notes-workspace__editor">

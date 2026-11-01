@@ -20,10 +20,10 @@ const BottomNavbar = () => {
           <Tags />
         </NavLink>
         <NavLink
-          to="/favourites"
+          to="/favorites"
           end
           className="bottom-navbar__link"
-          aria-label="Favourites"
+          aria-label="favorites"
         >
           <Star />
         </NavLink>
