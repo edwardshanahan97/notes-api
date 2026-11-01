@@ -11,10 +11,11 @@ const NotesList = ({ refresh, setRefresh }) => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const isFavorites = location.pathname === "/favorites";
 
   const handleAddNote = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/notes/", {
+      const response = await fetch(`http://localhost:3000/api/notes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -67,7 +68,7 @@ const NotesList = ({ refresh, setRefresh }) => {
         throw new Error("Failed to update favourite");
       }
 
-      if (location.pathname === "/favorites") {
+      if (isFavorites) {
         setNotes((prev) => prev.filter((item) => item.id !== noteId));
       } else {
         setNotes((prev) =>
@@ -84,11 +85,9 @@ const NotesList = ({ refresh, setRefresh }) => {
 
   useEffect(() => {
     const fetchNotes = async () => {
-      const isfavorite =
-        location.pathname === "/favorites" ? "?favorite=true" : "";
       try {
         const response = await fetch(
-          `http://localhost:3000/api/notes${isfavorite}`,
+          `http://localhost:3000/api/notes${isFavorites ? "?favorite=true" : ""}`,
           {
             credentials: "include",
           },
@@ -113,7 +112,7 @@ const NotesList = ({ refresh, setRefresh }) => {
 
   return (
     <div className="notes-list">
-      <h1>All Notes</h1>
+      <h1>{isFavorites ? "Favorites" : "All Notes"}</h1>
 
       <Button
         text="Add Note"
@@ -130,8 +129,12 @@ const NotesList = ({ refresh, setRefresh }) => {
         <p role="alert">{error}</p>
       ) : notes.length === 0 ? (
         <div className="notes-list__empty">
-          <h2>No notes yet</h2>
-          <p className="lead">Create your first note to get started.</p>
+          <h2>{isFavorites ? "No favorite notes yet" : "No notes yet"}</h2>
+          <p className="lead">
+            {isFavorites
+              ? "Star a note to see it here."
+              : "Create your first note to get started."}
+          </p>
         </div>
       ) : (
         notes.map(({ id, content, updated_at, favorite }) => (
