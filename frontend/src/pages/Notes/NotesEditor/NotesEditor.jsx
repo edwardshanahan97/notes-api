@@ -13,6 +13,8 @@ const NotesEditor = ({ setRefresh }) => {
   const [loading, setLoading] = useState(Boolean(id));
   const [error, setError] = useState("");
   const [note, setNote] = useState(null);
+  const [tags, setTags] = useState([]);
+  const [inputTags, setInputTags] = useState("");
   const [content, setContent] = useState("");
   const [mode, setMode] = useState("edit");
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ const NotesEditor = ({ setRefresh }) => {
           credentials: "include",
           body: JSON.stringify({
             content,
-            tags: note.tags,
+            tags: tags,
             favorite: note.favorite,
           }),
         },
@@ -71,6 +73,12 @@ const NotesEditor = ({ setRefresh }) => {
     }
   };
 
+  const handleAddTags = () => {
+    setTags((prev) => [...prev, inputTags]);
+
+    setInputTags("");
+  };
+
   useEffect(() => {
     if (!id) {
       return;
@@ -95,6 +103,9 @@ const NotesEditor = ({ setRefresh }) => {
 
         setNote(data);
         setContent(data.content ?? "");
+        setTags(data.tags ?? []);
+
+        console.log(data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -201,6 +212,19 @@ const NotesEditor = ({ setRefresh }) => {
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
           </div>
         )}
+
+        <input
+          type="text"
+          placeholder="Add Tags"
+          onChange={(event) => setInputTags(event.target.value)}
+          value={inputTags}
+        />
+
+        <button onClick={handleAddTags}>Add Tags</button>
+
+        {tags.map((tag, index) => (
+          <div key={index}>{tag}</div>
+        ))}
       </div>
     );
   }
