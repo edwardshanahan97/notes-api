@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useParams, Link, useNavigate } from "react-router";
-import { ArrowLeft, FilePenLine, Save, Trash2 } from "lucide-react";
+import { ArrowLeft, FilePenLine, Save, Trash2, X } from "lucide-react";
 
 import Button from "../../../components/Button/Button";
 
@@ -74,9 +74,23 @@ const NotesEditor = ({ setRefresh }) => {
   };
 
   const handleAddTags = () => {
-    setTags((prev) => [...prev, inputTags]);
+    const tagInput = inputTags.trim("").toLowerCase();
 
-    setInputTags("");
+    const tagExists = tags.includes(tagInput);
+
+    if (tagInput === "" || tagExists) {
+      return;
+    } else {
+      setTags((prev) => [...prev, tagInput]);
+
+      setInputTags("");
+    }
+  };
+
+  const handleRemoveTag = (tagName) => {
+    const filteredTags = tags.filter((tag) => tag !== tagName);
+
+    setTags(filteredTags);
   };
 
   useEffect(() => {
@@ -213,18 +227,39 @@ const NotesEditor = ({ setRefresh }) => {
           </div>
         )}
 
-        <input
-          type="text"
-          placeholder="Add Tags"
-          onChange={(event) => setInputTags(event.target.value)}
-          value={inputTags}
-        />
+        <div className="notes-editor__tag-form">
+          <input
+            className="notes-editor__tag-input"
+            type="text"
+            placeholder="Add a tag..."
+            value={inputTags}
+            onChange={(event) => setInputTags(event.target.value)}
+          />
 
-        <button onClick={handleAddTags}>Add Tags</button>
+          <Button
+            text="Add Tag"
+            className="button--primary"
+            type="button"
+            onClick={handleAddTags}
+          />
+        </div>
 
-        {tags.map((tag, index) => (
-          <div key={index}>{tag}</div>
-        ))}
+        <div className="notes-editor__tags">
+          {tags.map((tag) => (
+            <div className="notes-editor__tag" key={tag}>
+              <span className="notes-editor__tag-name">{tag}</span>
+
+              <button
+                type="button"
+                className="notes-editor__tag-remove"
+                onClick={() => handleRemoveTag(tag)}
+                aria-label={`Remove ${tag} tag`}
+              >
+                <X size={14} aria-hidden="true" />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
