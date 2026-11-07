@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import NotesList from "../NotesList/NotesList";
 import NotesEditor from "../NotesEditor/NotesEditor";
 import { useState } from "react";
+import TagsList from "../TagsList/TagsList";
 
 const NotesWorkspace = () => {
   const { id } = useParams();
@@ -11,7 +12,9 @@ const NotesWorkspace = () => {
   return (
     <div className={`notes-workspace ${id ? "notes-workspace--selected" : ""}`}>
       <div className="notes-workspace__list">
-        <NotesList refresh={refresh} setRefresh={setRefresh} />
+        <NotesList refresh={refresh} />
+
+        <TagsList refresh={refresh} />
       </div>
 
       <div className="notes-workspace__editor">
