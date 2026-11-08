@@ -6,4 +6,6 @@ Built with React, Vite, Node.js, Express, and PostgreSQL.
 
 The app includes note creation, Markdown editing and preview, and a responsive layout.
 
+Recently added note favorites and tag management, with tag-based filtering currently in development.
+
 Note: This project is intended for educational purposes and is a work in progress.
