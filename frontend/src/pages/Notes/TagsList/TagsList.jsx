@@ -48,7 +48,7 @@ const TagsList = ({ refresh }) => {
         <p role="alert">{error}</p>
       ) : tags.length === 0 ? (
         <div className="notes-list__empty">
-          <h2>No tags yet"</h2>
+          <h2>No tags yet</h2>
           <p className="lead">Add tags to your notes to see them here.</p>
         </div>
       ) : (

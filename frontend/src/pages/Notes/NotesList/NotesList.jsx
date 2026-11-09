@@ -1,6 +1,6 @@
 import "./NotesList.css";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import Button from "../../../components/Button/Button";
 import Search from "../Search/Search";
 import NoteCard from "../NoteCard/NoteCard";
@@ -11,7 +11,15 @@ const NotesList = ({ refresh }) => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const { tag } = useParams();
   const isFavorites = location.pathname === "/favorites";
+  const isTags = location.pathname === `/tags/${tag}`;
+
+  const query = isFavorites
+    ? "?favorite=true"
+    : isTags
+      ? `?tag=${encodeURIComponent(tag)}`
+      : "";
 
   const handleAddNote = async () => {
     try {
@@ -87,7 +95,7 @@ const NotesList = ({ refresh }) => {
     const fetchNotes = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/notes${isFavorites ? "?favorite=true" : ""}`,
+          `http://localhost:3000/api/notes${query}`,
           {
             credentials: "include",
           },

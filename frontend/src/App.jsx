@@ -22,6 +22,8 @@ const app = () => {
           <Route element={<NotesLayout />}>
             <Route path="/notes" element={<NotesWorkspace />} />
             <Route path="/notes/:id" element={<NotesWorkspace />} />
+            <Route path="/tags/" element={<NotesWorkspace />} />
+            <Route path="/tags/:tag" element={<NotesWorkspace />} />
             <Route path="/favorites" element={<NotesWorkspace />} />
           </Route>
         </Route>
