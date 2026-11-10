@@ -93,6 +93,9 @@ const NotesList = ({ refresh }) => {
 
   useEffect(() => {
     const fetchNotes = async () => {
+      setLoading(true);
+      setError("");
+
       try {
         const response = await fetch(
           `http://localhost:3000/api/notes${query}`,
@@ -120,7 +123,9 @@ const NotesList = ({ refresh }) => {
 
   return (
     <div className="notes-list">
-      <h1>{isFavorites ? "Favorites" : "All Notes"}</h1>
+      <h1>
+        {isFavorites ? "Favorites" : isTags ? `Tags: ${tag}` : "All Notes"}
+      </h1>
 
       <Button
         text="Add Note"
@@ -137,11 +142,20 @@ const NotesList = ({ refresh }) => {
         <p role="alert">{error}</p>
       ) : notes.length === 0 ? (
         <div className="notes-list__empty">
-          <h2>{isFavorites ? "No favorite notes yet" : "No notes yet"}</h2>
+          <h2>
+            {isFavorites
+              ? "No favorite notes yet"
+              : isTags
+                ? "No notes with this tag"
+                : "No notes yet"}
+          </h2>
+
           <p className="lead">
             {isFavorites
               ? "Star a note to see it here."
-              : "Create your first note to get started."}
+              : isTags
+                ? `No notes are tagged "${tag}" yet.`
+                : "Create your first note to get started."}
           </p>
         </div>
       ) : (

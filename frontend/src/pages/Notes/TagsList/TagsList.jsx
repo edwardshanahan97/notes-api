@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./TagsList.css";
 import { Link } from "react-router";
 
 const TagsList = ({ refresh }) => {
@@ -10,6 +11,7 @@ const TagsList = ({ refresh }) => {
     const fetchNotes = async () => {
       setLoading(true);
       setError("");
+
       try {
         const response = await fetch("http://localhost:3000/api/notes", {
           credentials: "include",
@@ -47,17 +49,17 @@ const TagsList = ({ refresh }) => {
       ) : error ? (
         <p role="alert">{error}</p>
       ) : tags.length === 0 ? (
-        <div className="notes-list__empty">
+        <div className="tags-list__empty">
           <h2>No tags yet</h2>
           <p className="lead">Add tags to your notes to see them here.</p>
         </div>
       ) : (
-        <div>
+        <div className="tags-list__items">
           <h2>Tags</h2>
 
           {tags.map((tag) => (
-            <Link to={`/tags/${tag}`} key={tag}>
-              {tag}
+            <Link to={`/tags/${tag}`} className="tags-list__link" key={tag}>
+              #{tag}
             </Link>
           ))}
         </div>
