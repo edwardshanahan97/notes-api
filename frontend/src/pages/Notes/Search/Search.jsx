@@ -1,11 +1,16 @@
 import "./Search.css";
 import { Search as SearchIcon } from "lucide-react";
 
-const Search = () => {
+const Search = ({ setSearch }) => {
   return (
     <label className="search" aria-label="Search Note">
       <SearchIcon />
-      <input type="text" className="search__input" placeholder="Search Note" />
+      <input
+        onChange={(event) => setSearch(event.target.value)}
+        type="text"
+        className="search__input"
+        placeholder="Search Note"
+      />
     </label>
   );
 };

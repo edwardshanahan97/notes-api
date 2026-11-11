@@ -9,17 +9,30 @@ const NotesList = ({ refresh }) => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { tag } = useParams();
   const isFavorites = location.pathname === "/favorites";
   const isTags = location.pathname === `/tags/${tag}`;
 
-  const query = isFavorites
-    ? "?favorite=true"
-    : isTags
-      ? `?tag=${encodeURIComponent(tag)}`
-      : "";
+  console.log(search);
+
+  const params = new URLSearchParams();
+
+  if (isFavorites) {
+    params.set("favorite", "true");
+  }
+
+  if (isTags) {
+    params.set("tag", tag);
+  }
+
+  if (search.trim()) {
+    params.set("search", search.trim());
+  }
+
+  const query = params.toString() ? `?${params.toString()}` : "";
 
   const handleAddNote = async () => {
     try {
@@ -119,7 +132,7 @@ const NotesList = ({ refresh }) => {
     };
 
     fetchNotes();
-  }, [refresh, location.pathname]);
+  }, [refresh, query]);
 
   return (
     <div className="notes-list">
@@ -134,7 +147,7 @@ const NotesList = ({ refresh }) => {
         onClick={handleAddNote}
       />
 
-      <Search />
+      <Search setSearch={setSearch} />
 
       {loading ? (
         <p>Loading notes...</p>
