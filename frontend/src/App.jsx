@@ -6,6 +6,7 @@ import Register from "./pages/Auth/Register/RegisterPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import NotesLayout from "./pages/Notes/NotesLayout";
 import NotesWorkspace from "./pages/Notes/NotesWorkspace/NotesWorkspace";
+import Profile from "./pages/Profile/Profile";
 
 const app = () => {
   return (
@@ -25,6 +26,8 @@ const app = () => {
             <Route path="/tags/" element={<NotesWorkspace />} />
             <Route path="/tags/:tag" element={<NotesWorkspace />} />
             <Route path="/favorites" element={<NotesWorkspace />} />
+
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Route>
       </Routes>
