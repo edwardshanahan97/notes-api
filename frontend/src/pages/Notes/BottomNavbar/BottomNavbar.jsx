@@ -1,6 +1,7 @@
 import "./BottomNavbar.css";
 import { NavLink, useMatch } from "react-router";
-import { NotebookPen, Star, Tags, UserRound } from "lucide-react";
+import { NotebookPen, Star, Tags, UserRound, LogOut } from "lucide-react";
+import handleLogout from "../../../utils/logout";
 
 const BottomNavbar = () => {
   const match = useMatch("/notes/:id");
@@ -34,6 +35,16 @@ const BottomNavbar = () => {
           aria-label="Profile"
         >
           <UserRound />
+        </NavLink>
+
+        <NavLink
+          to="/login"
+          end
+          className="bottom-navbar__link"
+          aria-label="Logout"
+          onClick={handleLogout}
+        >
+          <LogOut />
         </NavLink>
       </nav>
     )
