@@ -23,20 +23,26 @@ describe("Authentication API", () => {
 
     await pool.query("DELETE FROM users WHERE email = $1", [email]);
 
-    const response = await agent.post("/api/auth/register").send({
-      name: "Test User",
-      email,
-      password,
-    });
+    const response = await agent
+      .post("/api/auth/register")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({
+        name: "Test User",
+        email,
+        password,
+      });
 
     expect(response.status).toBe(201);
   });
 
   it("check authenticated session", async () => {
-    const response = await agent.post("/api/auth/login").send({
-      email,
-      password,
-    });
+    const response = await agent
+      .post("/api/auth/login")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({
+        email,
+        password,
+      });
 
     expect(response.status).toBe(200);
 
@@ -44,7 +50,9 @@ describe("Authentication API", () => {
     expect(myResponse.status).toBe(200);
     expect(myResponse.body.email).toBe(email);
 
-    const logoutResponse = await agent.post("/api/auth/logout");
+    const logoutResponse = await agent
+      .post("/api/auth/logout")
+      .set("Origin", process.env.CLIENT_ORIGIN);
     expect(logoutResponse.status).toBe(204);
 
     const afterLogoutResponse = await agent.get("/api/auth/me");

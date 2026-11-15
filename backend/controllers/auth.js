@@ -86,9 +86,19 @@ export const login = async (req, res) => {
 
     const { id, name, email: emailResult, created_at } = user.rows[0];
 
-    req.session.userId = id;
+    req.session.regenerate((error) => {
+      if (error) {
+        console.error("Session regeneration failed:", error);
 
-    res.json({ id, name, email: emailResult, created_at });
+        return res.status(500).json({
+          error: "Internal server error",
+        });
+      }
+
+      req.session.userId = id;
+
+      res.json({ id, name, email: emailResult, created_at });
+    });
   } catch (error) {
     console.log(error);
 
@@ -127,8 +137,10 @@ export const logout = (req, res) => {
   req.session.destroy((error) => {
     if (error) {
       return res.status(500).json({ error: "Internal server error!" });
-    } else {
-      res.status(204).end();
     }
+
+    res.clearCookie("connect.sid");
+
+    res.status(204).end();
   });
 };

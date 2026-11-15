@@ -8,7 +8,7 @@ const checkOrigin = (req, res, next) => {
   const origin = req.get("Origin");
   const allowedOrigin = process.env.CLIENT_ORIGIN;
 
-  if (origin && origin !== allowedOrigin) {
+  if (!origin || origin !== allowedOrigin) {
     return res.status(403).json({
       error: "Forbidden origin",
     });

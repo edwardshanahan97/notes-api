@@ -27,15 +27,17 @@ describe("Notes CRUD API", () => {
       const oldUserId = existingUser.rows[0].id;
 
       await pool.query("DELETE FROM notes WHERE user_id = $1", [oldUserId]);
-
       await pool.query("DELETE FROM users WHERE id = $1", [oldUserId]);
     }
 
-    const response = await request(app).post("/api/auth/register").send({
-      name: "Notes Test User",
-      email,
-      password,
-    });
+    const response = await request(app)
+      .post("/api/auth/register")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({
+        name: "Notes Test User",
+        email,
+        password,
+      });
 
     expect(response.status).toBe(201);
 
@@ -43,6 +45,7 @@ describe("Notes CRUD API", () => {
 
     const loginResponse = await agent
       .post("/api/auth/login")
+      .set("Origin", process.env.CLIENT_ORIGIN)
       .send({ email, password });
 
     expect(loginResponse.status).toBe(200);
@@ -59,16 +62,20 @@ describe("Notes CRUD API", () => {
       await pool.query("DELETE FROM users WHERE id = $1", [otherUserId]);
     }
 
-    const registerOther = await request(app).post("/api/auth/register").send({
-      name: "Other User",
-      email: otherEmail,
-      password,
-    });
+    const registerOther = await request(app)
+      .post("/api/auth/register")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({
+        name: "Other User",
+        email: otherEmail,
+        password,
+      });
 
     expect(registerOther.status).toBe(201);
 
     const loginOther = await otherAgent
       .post("/api/auth/login")
+      .set("Origin", process.env.CLIENT_ORIGIN)
       .send({ email: otherEmail, password });
 
     expect(loginOther.status).toBe(200);
@@ -90,6 +97,7 @@ describe("Notes CRUD API", () => {
     it("send note", async () => {
       const response = await agent
         .post("/api/notes/")
+        .set("Origin", process.env.CLIENT_ORIGIN)
         .send({ content, tags, favorite });
 
       expect(response.status).toBe(201);
@@ -104,8 +112,10 @@ describe("Notes CRUD API", () => {
     const content = "# this is a test note 2";
     const tags = ["testing"];
     const favorite = false;
+
     const response = await agent
       .post("/api/notes/")
+      .set("Origin", process.env.CLIENT_ORIGIN)
       .send({ content, tags, favorite });
 
     expect(response.status).toBe(201);
@@ -115,7 +125,6 @@ describe("Notes CRUD API", () => {
     const noteResponse = await agent.get(`/api/notes/${noteId}`);
 
     expect(noteResponse.status).toBe(200);
-
     expect(noteResponse.body.content).toBe(content);
     expect(noteResponse.body.tags).toEqual(tags);
     expect(noteResponse.body.favorite).toBe(favorite);
@@ -123,11 +132,27 @@ describe("Notes CRUD API", () => {
   });
 
   it("get all notes", async () => {
-    const noteA = { content: "# note a", tags: ["note a"], favorite: false };
-    const noteB = { content: "# note b", tags: ["note b"], favorite: true };
+    const noteA = {
+      content: "# note a",
+      tags: ["note a"],
+      favorite: false,
+    };
 
-    const responseA = await agent.post("/api/notes").send(noteA);
-    const responseB = await agent.post("/api/notes").send(noteB);
+    const noteB = {
+      content: "# note b",
+      tags: ["note b"],
+      favorite: true,
+    };
+
+    const responseA = await agent
+      .post("/api/notes")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send(noteA);
+
+    const responseB = await agent
+      .post("/api/notes")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send(noteB);
 
     expect(responseA.status).toBe(201);
     expect(responseB.status).toBe(201);
@@ -143,8 +168,10 @@ describe("Notes CRUD API", () => {
     const content = "# this is a edit test";
     const tags = ["edit"];
     const favorite = false;
+
     const response = await agent
       .post("/api/notes/")
+      .set("Origin", process.env.CLIENT_ORIGIN)
       .send({ content, tags, favorite });
 
     expect(response.status).toBe(201);
@@ -153,9 +180,15 @@ describe("Notes CRUD API", () => {
     const editContent = "Edited";
     const editTags = ["edited"];
     const editFavorite = true;
+
     const editNote = await agent
       .put(`/api/notes/${noteId}`)
-      .send({ content: editContent, tags: editTags, favorite: editFavorite });
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({
+        content: editContent,
+        tags: editTags,
+        favorite: editFavorite,
+      });
 
     expect(editNote.status).toBe(200);
     expect(editNote.body.content).toBe(editContent);
@@ -177,12 +210,18 @@ describe("Notes CRUD API", () => {
       favorite: false,
     };
 
-    const createResponse = await agent.post("/api/notes").send(note);
+    const createResponse = await agent
+      .post("/api/notes")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send(note);
 
     expect(createResponse.status).toBe(201);
 
     const noteId = createResponse.body.id;
-    const deleteResponse = await agent.delete(`/api/notes/${noteId}`);
+
+    const deleteResponse = await agent
+      .delete(`/api/notes/${noteId}`)
+      .set("Origin", process.env.CLIENT_ORIGIN);
 
     expect(deleteResponse.status).toBe(204);
 
@@ -192,11 +231,14 @@ describe("Notes CRUD API", () => {
   });
 
   it("prevents another user from accessing a note", async () => {
-    const createResponse = await agent.post("/api/notes").send({
-      content: "Private note",
-      tags: ["private"],
-      favorite: false,
-    });
+    const createResponse = await agent
+      .post("/api/notes")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({
+        content: "Private note",
+        tags: ["private"],
+        favorite: false,
+      });
 
     expect(createResponse.status).toBe(201);
 
@@ -205,15 +247,21 @@ describe("Notes CRUD API", () => {
     const readResponse = await otherAgent.get(`/api/notes/${noteId}`);
     expect(readResponse.status).toBe(404);
 
-    const updateResponse = await otherAgent.put(`/api/notes/${noteId}`).send({
-      content: "Hacked!",
-      tags: ["changed"],
-      favorite: true,
-    });
+    const updateResponse = await otherAgent
+      .put(`/api/notes/${noteId}`)
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({
+        content: "Hacked!",
+        tags: ["changed"],
+        favorite: true,
+      });
 
     expect(updateResponse.status).toBe(404);
 
-    const deleteResponse = await otherAgent.delete(`/api/notes/${noteId}`);
+    const deleteResponse = await otherAgent
+      .delete(`/api/notes/${noteId}`)
+      .set("Origin", process.env.CLIENT_ORIGIN);
+
     expect(deleteResponse.status).toBe(404);
 
     const originalResponse = await agent.get(`/api/notes/${noteId}`);
@@ -225,11 +273,14 @@ describe("Notes CRUD API", () => {
   });
 
   it("rejects invalid note data", async () => {
-    const response = await agent.post("/api/notes").send({
-      content: 123,
-      tags: "testing",
-      favorite: "yes",
-    });
+    const response = await agent
+      .post("/api/notes")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({
+        content: 123,
+        tags: "testing",
+        favorite: "yes",
+      });
 
     expect(response.status).toBe(400);
   });
