@@ -7,7 +7,15 @@ const validateNoteData = (content, tags, favorite) => {
     return false;
   }
 
-  if (tags.some((tag) => typeof tag !== "string" || tag.trim() === "")) {
+  if (content.length > 3000 || tags.length > 20) {
+    return false;
+  }
+
+  if (
+    tags.some(
+      (tag) => typeof tag !== "string" || tag.trim() === "" || tag.length > 50,
+    )
+  ) {
     return false;
   }
 

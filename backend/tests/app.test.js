@@ -58,5 +58,40 @@ describe("Authentication API", () => {
     const afterLogoutResponse = await agent.get("/api/auth/me");
 
     expect(afterLogoutResponse.status).toBe(401);
+
+    const cookies = logoutResponse.headers["set-cookie"];
+
+    expect(cookies).toBeDefined();
+    expect(cookies.some((cookie) => cookie.startsWith("connect.sid="))).toBe(
+      true,
+    );
+    expect(
+      cookies.some(
+        (cookie) =>
+          cookie.startsWith("connect.sid=") && cookie.includes("Expires="),
+      ),
+    ).toBe(true);
+  });
+
+  it("regenerates the session ID on login", async () => {
+    const firstLogin = await agent
+      .post("/api/auth/login")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({ email, password });
+
+    expect(firstLogin.status).toBe(200);
+
+    const firstCookie = firstLogin.headers["set-cookie"][0].split(";")[0];
+
+    const secondLogin = await agent
+      .post("/api/auth/login")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({ email, password });
+
+    expect(secondLogin.status).toBe(200);
+
+    const secondCookie = secondLogin.headers["set-cookie"][0].split(";")[0];
+
+    expect(secondCookie).not.toBe(firstCookie);
   });
 });

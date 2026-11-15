@@ -303,4 +303,27 @@ describe("Notes CRUD API", () => {
 
     expect(response.status).toBe(403);
   });
+
+  it("rejects requests with no origin header", async () => {
+    const response = await agent.post("/api/notes").send({
+      content: "Should not be created",
+      tags: [],
+      favorite: false,
+    });
+
+    expect(response.status).toBe(403);
+  });
+
+  it("rejects notes that exceed size limits", async () => {
+    const response = await agent
+      .post("/api/notes")
+      .set("Origin", process.env.CLIENT_ORIGIN)
+      .send({
+        content: "a".repeat(3001),
+        tags: ["test"],
+        favorite: false,
+      });
+
+    expect(response.status).toBe(400);
+  });
 });
