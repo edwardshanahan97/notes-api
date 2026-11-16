@@ -3,12 +3,21 @@ import notesRouter from "./routes/notes.js";
 import authRouter from "./routes/auth.js";
 import cors from "cors";
 import session from "express-session";
+import pool from "./database/db.js";
+import connectPgSimple from "connect-pg-simple";
 import errorHandler from "./middleware/errorHandler.js";
 import authLimiter from "./middleware/authLimiter.js";
 import helmet from "helmet";
 import checkOrigin from "./middleware/checkOrigin.js";
 
 const app = express();
+const PgStore = connectPgSimple(session);
+
+const sessionStore = new PgStore({
+  pool,
+  createTableIfMissing: true,
+});
+
 app.use(helmet());
 app.use(express.json());
 app.use(
@@ -26,6 +35,7 @@ app.use((req, res, next) => {
 
 app.use(
   session({
+    store: sessionStore,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
