@@ -8,6 +8,7 @@ import { ArrowLeft, FilePenLine, Save, Trash2, X } from "lucide-react";
 import Button from "../../../components/Button/Button";
 
 const NotesEditor = ({ setRefresh }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const noteId = Number(id);
   const [loading, setLoading] = useState(Boolean(id));
@@ -20,20 +21,18 @@ const NotesEditor = ({ setRefresh }) => {
   const navigate = useNavigate();
 
   const handleSave = async () => {
+    const API_URL = import.meta.env.VITE_API_URL;
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/notes/${noteId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            content,
-            tags: tags,
-            favorite: note.favorite,
-          }),
-        },
-      );
+      const response = await fetch(`${API_URL}/api/notes/${noteId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          content,
+          tags: tags,
+          favorite: note.favorite,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to save note");
@@ -52,14 +51,11 @@ const NotesEditor = ({ setRefresh }) => {
 
     if (!confirmed) return;
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/notes/${noteId}`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        },
-      );
+      const response = await fetch(`${API_URL}/api/notes/${noteId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
 
       if (!response.ok) {
         throw new Error("Failed to delete note");
@@ -102,12 +98,9 @@ const NotesEditor = ({ setRefresh }) => {
       try {
         setLoading(true);
 
-        const response = await fetch(
-          `http://localhost:3000/api/notes/${noteId}`,
-          {
-            credentials: "include",
-          },
-        );
+        const response = await fetch(`${API_URL}/api/notes/${noteId}`, {
+          credentials: "include",
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch note");

@@ -2,6 +2,7 @@ import "./Profile.css";
 import { useEffect, useState } from "react";
 
 const Profile = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -12,7 +13,7 @@ const Profile = () => {
       setError("");
 
       try {
-        const response = await fetch("http://localhost:3000/api/auth/me", {
+        const response = await fetch(`${API_URL}/api/auth/me`, {
           credentials: "include",
         });
 

@@ -6,6 +6,7 @@ import Search from "../Search/Search";
 import NoteCard from "../NoteCard/NoteCard";
 
 const NotesList = ({ refresh }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -36,7 +37,7 @@ const NotesList = ({ refresh }) => {
 
   const handleAddNote = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/notes`, {
+      const response = await fetch(`${API_URL}/api/notes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -71,19 +72,16 @@ const NotesList = ({ refresh }) => {
         return;
       }
 
-      const response = await fetch(
-        `http://localhost:3000/api/notes/${noteId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            content: note.content,
-            tags: note.tags,
-            favorite: !note.favorite,
-          }),
-        },
-      );
+      const response = await fetch(`${API_URL}/api/notes/${noteId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          content: note.content,
+          tags: note.tags,
+          favorite: !note.favorite,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update favourite");
@@ -110,12 +108,9 @@ const NotesList = ({ refresh }) => {
       setError("");
 
       try {
-        const response = await fetch(
-          `http://localhost:3000/api/notes${query}`,
-          {
-            credentials: "include",
-          },
-        );
+        const response = await fetch(`${API_URL}/api/notes${query}`, {
+          credentials: "include",
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch notes");

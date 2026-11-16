@@ -3,6 +3,7 @@ import "./TagsList.css";
 import { Link } from "react-router";
 
 const TagsList = ({ refresh }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -13,7 +14,7 @@ const TagsList = ({ refresh }) => {
       setError("");
 
       try {
-        const response = await fetch("http://localhost:3000/api/notes", {
+        const response = await fetch(`${API_URL}/api/notes`, {
           credentials: "include",
         });
 
